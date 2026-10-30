@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StepSure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+<style>
+/* Layout: one centred phone on a pale clinical ground; app fills the screen below 560px. Single light theme by design. */
+:root{
+  --page:#E8EDF3; --page-deep:#D9E1EB;
+  --navy:#0F1F3D; --ink:#2A3854; --muted:#5D6A80; --faint:#8C96A8;
+  --line:#E1E6EE; --soft:#F3F6FA; --surface:#FFFFFF;
+  --blue:#2459C2; --blue-soft:#E7EEFB;
+  --teal:#0D7A76; --teal-soft:#E0F2F0;
+  --amber:#8F5300; --amber-bg:#FFF4DE; --amber-line:#E7A23A;
+  --red:#A8261D; --red-bg:#FDEDEB;
+  --off:#A2ACBC; --bezel:#0B1525;
+  --f-display:"Sora","Figtree",system-ui,sans-serif;
+  --f-body:"Figtree","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0}
+body{background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:10px}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Stage */
+.stage{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:18px 16px 22px;
+  background:radial-gradient(1200px 700px at 50% 40%,#F4F7FA 0%,var(--page) 55%,var(--page-deep) 100%)}
+.bar{width:min(100%,560px);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:600;font-size:19px;color:var(--navy);letter-spacing:-.01em}
+.brand .mark{width:32px;height:32px;border-radius:10px;background:var(--navy);display:grid;place-items:center}
+.brand .mark svg{width:18px;height:18px}
+.tier{display:flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:0 1px 2px rgba(15,31,61,.06)}
+.tier button{border:0;background:none;padding:7px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tier button[aria-checked="true"]{background:var(--navy);color:#fff}
+.tier button svg{width:15px;height:15px}
+.reset{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:6px}
+.reset svg{width:16px;height:16px}
+.reset:hover,.tier button:hover:not([aria-checked="true"]){background:var(--soft)}
+
+.device{--w:min(392px,calc(100vw - 32px),max(280px,calc((100vh - 120px) * .476)));flex:none;width:var(--w);height:calc(var(--w) * 824 / 392);max-width:100%;background:var(--bezel);border-radius:calc(var(--w) * .135);padding:calc(var(--w) * .028);
+  box-shadow:0 0 0 2px #1E2A3D inset,0 30px 60px -20px rgba(15,31,61,.45),0 12px 24px -12px rgba(15,31,61,.3)}
+@supports (height:100dvh){.device{--w:min(392px,calc(100vw - 32px),max(280px,calc((100dvh - 120px) * .476)))}}
+/* The frame never grows with content: its height comes from its width and aspect ratio, and only the screen inside scrolls. */
+.screen{position:relative;width:100%;height:100%;border-radius:calc(var(--w) * .108);overflow:hidden;background:var(--surface);display:flex;flex-direction:column}
+
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-weight:600;font-size:14px;color:var(--navy);font-variant-numeric:tabular-nums;position:relative}
+.sb .notch{position:absolute;left:50%;top:9px;transform:translateX(-50%);width:96px;height:26px;border-radius:20px;background:var(--bezel)}
+.sb .sys{display:flex;gap:5px;align-items:center}
+.sb .sys svg{width:16px;height:16px}
+
+.view{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;position:relative}
+.view.enter{animation:enter .24s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pad{padding:6px 18px 24px;display:flex;flex-direction:column;gap:14px}
+
+.tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:#fff;padding:6px 6px 10px}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:12px;font-size:12px;font-weight:600;color:var(--faint)}
+.tabs button svg{width:22px;height:22px}
+.tabs button[aria-current="page"]{color:var(--navy)}
+.tabs button[aria-current="page"] svg{color:var(--teal)}
+
+/* Type */
+h1,h2,h3{margin:0;color:var(--navy);text-wrap:balance}
+.greet h1{font-family:var(--f-display);font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.title{font-family:var(--f-display);font-size:22px;font-weight:600;letter-spacing:-.02em}
+.eyebrow{margin:0 0 2px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.h3{font-size:16px;font-weight:700;color:var(--navy)}
+.sub{margin:4px 0 0;color:var(--muted);font-size:14px}
+.note{margin:0;color:var(--muted);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+p{margin:0}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.card.soft{background:var(--soft);border-color:transparent}
+button.card{width:100%;transition:border-color .15s,box-shadow .15s}
+button.card:hover{border-color:#C9D2E0;box-shadow:0 2px 10px -4px rgba(15,31,61,.18)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.link-s{display:flex;align-items:center;gap:2px;color:var(--blue);font-size:14px;font-weight:600}
+.link-s svg{width:16px;height:16px}
+
+/* Banners */
+.banner{width:100%;border-radius:16px;padding:13px 14px;display:flex;gap:11px;align-items:flex-start;text-align:left;border:1px solid transparent}
+.banner>svg{margin-top:1px;width:22px;height:22px}
+.b-txt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.b-txt strong{font-size:15px;color:var(--navy)}
+.b-txt span{font-size:13.5px;color:var(--ink)}
+.b-cta{align-self:center;display:flex;align-items:center;font-size:13px;font-weight:700;white-space:nowrap}
+.b-cta svg{width:16px;height:16px}
+.banner.ok{background:var(--teal-soft);color:var(--teal)}
+.banner.warn{background:var(--amber-bg);border-color:#F3D29A;color:var(--amber)}
+.banner.off{background:#EEF1F5;border-color:#D5DBE5;color:#4A5669}
+.banner.done{background:var(--soft);color:var(--teal)}
+.banner.urgent{background:var(--red-bg);color:var(--red)}
+button.banner:hover{filter:brightness(.985)}
+
+/* Device card */
+.ins-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ins{display:flex;flex-direction:column;gap:7px;padding:11px 12px;border-radius:14px;background:var(--soft)}
+.ins-top{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--navy)}
+.ins-top svg{color:var(--teal);width:18px;height:18px}
+.batt{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.batt-bar{flex:1;height:7px;border-radius:9px;background:#DDE3EC;overflow:hidden}
+.batt-bar i{display:block;height:100%;background:var(--teal);border-radius:9px}
+.ins-st{font-size:12.5px;font-weight:600;color:var(--teal)}
+.ins.is-off{background:#F1F2F5;outline:1.5px dashed #C3CAD6;outline-offset:-1.5px}
+.ins.is-off .ins-top svg,.ins.is-off .ins-st{color:#6B7689}
+.ins.is-off .batt-bar i{background:var(--off)}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.meta-row span{display:flex;align-items:center;gap:5px}
+.meta-row svg{width:15px;height:15px}
+.q-ok{color:var(--teal)!important;font-weight:600}
+.q-bad{color:var(--amber)!important;font-weight:700}
+
+/* Segmented */
+.seg{display:inline-flex;background:var(--soft);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:none;padding:6px 11px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:5px}
+.seg button svg{width:15px;height:15px}
+.seg button[aria-checked="true"]{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(15,31,61,.14)}
+.seg.full{display:flex}.seg.full button{flex:1;justify-content:center}
+
+/* Foot map */
+.hm{position:relative;width:100%;max-width:300px;aspect-ratio:300/306;align-self:center;container-type:inline-size}
+.hm img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hm-chip{position:absolute;transform:translate(-50%,-50%);font:700 max(9px,3.4cqw)/1.25 var(--f-body);font-variant-numeric:tabular-nums;background:rgba(255,255,255,.93);color:var(--navy);padding:.15em .4em;border-radius:7px;box-shadow:0 1px 3px rgba(15,31,61,.25);white-space:nowrap}
+.hm-chip.hot{background:var(--navy);color:#fff;animation:hot 1.8s ease-in-out infinite}
+@keyframes hot{50%{box-shadow:0 0 0 5px rgba(231,162,58,.45)}}
+.hm-lab{position:absolute;transform:translate(-50%,-50%);font:700 max(10px,3.8cqw) var(--f-body);letter-spacing:.06em;color:var(--navy)}
+.hm-off{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;font-size:max(9.5px,3.4cqw);color:#6B7689;text-align:center;white-space:nowrap}
+.hm-off b{font-size:1.15em;color:#4A5669}
+.legend{display:flex;flex-direction:column;gap:4px}
+.legend .ramp{height:9px;border-radius:9px}
+.legend .ticks{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend .ltitle{font-size:12px;font-weight:600;color:var(--ink)}
+
+/* Rows */
+.row-card{flex-direction:row!important;align-items:center;gap:12px!important}
+.row-card>svg:first-child{width:24px;height:24px;color:var(--teal)}
+.row-card>svg:last-child{color:var(--faint)}
+.rc-txt{flex:1;display:flex;flex-direction:column;gap:1px;min-width:0}
+.rc-txt strong{color:var(--navy);font-size:15px}
+.rc-txt span{font-size:13px;color:var(--muted)}
+.demo-row{display:flex;align-items:center;justify-content:center;gap:10px;border-top:1px dashed var(--line);padding-top:12px;font-size:12px;color:var(--faint)}
+.demo-link{border:1px dashed #BAC4D3;background:none;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.demo-link:hover{border-color:var(--amber-line);color:var(--amber)}
+
+/* Buttons */
+.btn{border:0;border-radius:14px;min-height:48px;padding:12px 16px;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;transition:background .15s,transform .1s}
+.btn:active:not(:disabled){transform:scale(.985)}
+.btn.primary{background:var(--navy);color:#fff}
+.btn.primary:hover:not(:disabled){background:#1B305A}
+.btn.secondary{background:#fff;color:var(--navy);border:1.5px solid #CDD5E1}
+.btn.secondary:hover:not(:disabled){background:var(--soft)}
+.btn.teal{background:var(--teal);color:#fff}
+.btn.ghost{background:none;color:var(--blue);min-height:40px}
+.btn.sm{min-height:40px;padding:8px 12px;font-size:14px;border-radius:12px}
+.btn:disabled{opacity:.45}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.adv{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 7px 3px 5px;border-radius:999px;white-space:nowrap}
+.adv svg{width:12px;height:12px}
+.ess{display:inline-flex;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--teal);background:var(--teal-soft);padding:3px 8px;border-radius:999px}
+.locked{width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed #C9D3E3;border-radius:14px;padding:11px 12px;background:none;text-align:left;font-size:14px;color:var(--muted)}
+.locked svg{width:18px;height:18px;color:var(--blue)}
+.locked strong{color:var(--navy);font-weight:700}
+.locked:hover{background:var(--soft)}
+
+.back{display:flex;align-items:center;gap:2px;border:0;background:none;color:var(--blue);font-weight:600;font-size:15px;padding:6px 4px 2px 0;align-self:flex-start}
+.back svg{width:18px;height:18px}
+
+/* Key-values */
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:0}
+.kv div{min-width:0}
+.kv dt{font-size:12px;color:var(--muted)}
+.kv dd{margin:1px 0 0;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.status{font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:999px}
+.s-ok{background:var(--teal-soft);color:var(--teal)}
+.s-warn{background:#EEF1F5;color:#4A5669}
+.ins-card.is-off{background:#FAFBFC;border-style:dashed}
+
+/* Charts */
+.chart{width:100%;height:auto;display:block}
+.c-grid{stroke:#E7EBF1;stroke-width:1}
+.c-ylab,.c-xlab{font:500 10px var(--f-body);fill:#6E7A8E;font-variant-numeric:tabular-nums}
+.c-line{fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.c-thr{stroke:var(--amber-line);stroke-width:1.5;stroke-dasharray:5 4}
+.c-tlab{font:700 10px var(--f-body);fill:var(--amber)}
+.c-target{stroke:#9AA6B8;stroke-width:1.2;stroke-dasharray:3 4}
+.c-glab{font:600 10px var(--f-body);fill:#6E7A8E}
+.c-bar{fill:var(--teal)}
+.c-bar.partial{fill:#C4CBD6}
+.c-bar.today{fill:#8BC7C2}
+.c-gap{fill:url(#hatch)}
+.c-area{opacity:.12}
+.c-key{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.c-key span{display:flex;align-items:center;gap:6px}
+.c-key i{width:14px;height:3px;border-radius:3px;display:inline-block}
+.c-key i.dot{width:9px;height:9px;border-radius:50%}
+.c-key i.hollow{width:9px;height:9px;border-radius:50%;border:1.8px solid var(--teal);background:#fff}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--soft);border-radius:12px;padding:9px 10px;min-width:0}
+.stat b{display:block;font-size:17px;color:var(--navy);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--muted);line-height:1.25;display:block}
+.stat.warn{background:var(--amber-bg)}
+.stat.warn b{color:var(--amber)}
+
+/* Lists */
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.list li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.list li>svg{width:18px;height:18px;margin-top:1px;color:var(--teal)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:s}
+.steps li{display:flex;gap:10px;font-size:14px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.steps li.urg::before{background:var(--red)}
+.callout{border-radius:14px;padding:12px 13px;font-size:13.5px;display:flex;gap:9px;align-items:flex-start}
+.callout svg{width:18px;height:18px;margin-top:1px}
+.callout.info{background:var(--blue-soft);color:#1E3F87}
+.callout.info b{color:var(--navy)}
+.callout.urgent{background:var(--red-bg);color:var(--red)}
+
+/* Tracker */
+.track{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.track li{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line)}
+.track li:first-child{border-top:0;padding-top:2px}
+.track .dot{width:12px;height:12px;border-radius:50%;flex:none;border:2px solid #C3CBD7;background:#fff}
+.track .dot.on{border-color:var(--teal);background:var(--teal)}
+.track .dot.mid{border-color:var(--blue);background:var(--blue-soft)}
+.track .dot.na{border-style:dashed}
+.track .tt{flex:1;min-width:0;display:flex;flex-direction:column}
+.track .tt strong{font-size:14px;color:var(--navy)}
+.track .tt span{font-size:12.5px;color:var(--muted)}
+.track .act{border:1px solid #CDD5E1;background:#fff;border-radius:10px;padding:6px 10px;font-size:12.5px;font-weight:700;color:var(--navy);white-space:nowrap}
+.track .act:hover{background:var(--soft)}
+.pipe{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;margin-top:3px;flex-wrap:wrap}
+.pipe .p{padding:2px 8px;border-radius:999px;background:#EEF1F5;color:#7A8597}
+.pipe .p.on{background:var(--teal-soft);color:var(--teal)}
+.pipe svg{width:13px;height:13px;color:var(--faint)}
+
+/* Report */
+.rep{display:flex;flex-direction:column;gap:14px}
+.rep-head{border-bottom:2px solid var(--navy);padding-bottom:10px}
+.rep-head h2{font-family:var(--f-display);font-size:19px;font-weight:600}
+.rep-sec h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.rep-sec p,.rep-sec li{font-size:14px}
+.rep-sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--muted);font-weight:600}
+td.hot{color:var(--amber);font-weight:700}
+.rep-foot{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.actions .btn{font-size:14px;min-height:46px;padding:10px}
+.actions .wide{grid-column:1/-1}
+
+/* Chat */
+.view.chat{display:flex;flex-direction:column;overflow:hidden}
+.chat-top{padding:4px 18px 10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.chat-top .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.disc{font-size:12px;color:var(--muted)}
+.msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:10px 13px;border-radius:18px;font-size:14.5px;animation:enter .22s ease-out}
+.msg.a{background:var(--soft);color:var(--ink);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.u{background:var(--navy);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.msg .vt{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;opacity:.75;margin-bottom:3px}
+.msg .vt svg{width:12px;height:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 10px}
+.chip{border:1.5px solid #C9D3E3;background:#fff;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600;color:var(--navy);text-align:left}
+.chip:hover{background:var(--blue-soft);border-color:#AFC3EA}
+.composer{display:flex;gap:8px;padding:8px 12px 10px;border-top:1px solid var(--line);align-items:center}
+.composer input{flex:1;min-width:0;border:1.5px solid #CDD5E1;border-radius:999px;padding:11px 15px;font-size:15px;background:#fff}
+.composer input:focus{outline:none;border-color:var(--blue)}
+.ibtn{width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;flex:none}
+.ibtn.send{background:var(--navy);color:#fff}
+.ibtn.mic{background:var(--teal-soft);color:var(--teal)}
+.ibtn svg{width:20px;height:20px}
+.listen{position:absolute;inset:0;background:rgba(255,255,255,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:5;animation:enter .2s}
+.rings{position:relative;width:110px;height:110px;display:grid;place-items:center}
+.rings i{position:absolute;inset:0;border-radius:50%;background:var(--teal);opacity:.18;animation:ring 1.6s ease-out infinite}
+.rings i:nth-child(2){animation-delay:.5s}.rings i:nth-child(3){animation-delay:1s}
+@keyframes ring{from{transform:scale(.5);opacity:.35}to{transform:scale(1.25);opacity:0}}
+.rings b{width:64px;height:64px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;position:relative}
+.rings b svg{width:28px;height:28px}
+.listen p{font-weight:700;color:var(--navy)}
+.wave{display:flex;gap:4px;align-items:center;height:28px}
+.wave i{width:4px;border-radius:4px;background:var(--teal);animation:wave 1s ease-in-out infinite}
+.wave i:nth-child(odd){animation-delay:.2s}.wave i:nth-child(3n){animation-delay:.4s}
+@keyframes wave{0%,100%{height:6px}50%{height:26px}}
+
+/* Preview (Free) */
+.pv{border-radius:18px;background:linear-gradient(160deg,#F3F7FE,#EEF6F5);padding:16px;display:flex;flex-direction:column;gap:12px;border:1px solid #DCE6F5}
+.pv .mini{display:flex;flex-direction:column;gap:6px;pointer-events:none;opacity:.9}
+.pv .mini .msg{font-size:13px;max-width:92%;animation:none}
+.pv .msg.a{background:#fff}
+
+/* Profile */
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--teal-soft);color:var(--teal);display:grid;place-items:center;font-family:var(--f-display);font-size:22px;font-weight:600}
+.who{display:flex;gap:14px;align-items:center}
+.switch{width:46px;height:28px;border-radius:999px;border:0;background:#CCD3DE;position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--teal)}
+.switch[aria-checked="true"]::after{transform:translateX(18px)}
+
+/* Sheet */
+.layer{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end}
+.layer[hidden]{display:none!important}
+.scrim{position:absolute;inset:0;background:rgba(11,21,37,.42);border:0;padding:0;cursor:default}
+.panel{position:relative;background:#fff;border-radius:24px 24px 0 0;max-height:90%;overflow-y:auto;padding:10px 18px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -10px 30px -10px rgba(15,31,61,.3)}
+.panel:focus{outline:none}
+.layer.anim .scrim{animation:fade .25s}
+.layer.anim .panel{animation:up .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.grab{width:40px;height:5px;border-radius:5px;background:#D7DDE6;align-self:center}
+.panel h2{font-family:var(--f-display);font-size:20px;font-weight:600;letter-spacing:-.01em}
+.p-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.x{border:0;background:var(--soft);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--muted)}
+.x svg{width:18px;height:18px}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+legend{font-weight:700;color:var(--navy);font-size:14.5px;padding:0;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opt{border:1.5px solid #CDD5E1;background:#fff;border-radius:12px;padding:9px 12px;font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px;text-align:left}
+.opt svg{width:16px;height:16px;color:transparent}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{border-color:var(--teal);background:var(--teal-soft);color:var(--navy)}
+.opt[aria-pressed="true"] svg,.opt[aria-checked="true"] svg{color:var(--teal)}
+.checks .opt{width:100%}
+.field{display:flex;flex-direction:column;gap:6px;font-weight:700;color:var(--navy);font-size:14.5px}
+.field textarea,.field input{border:1.5px solid #CDD5E1;border-radius:12px;padding:10px 12px;font-weight:400;font-size:15px;resize:vertical;width:100%;background:#fff}
+.field textarea:focus,.field input:focus{outline:none;border-color:var(--blue)}
+.err{color:var(--red);font-size:13px;font-weight:600}
+.prog{display:flex;gap:6px}
+.prog i{flex:1;height:4px;border-radius:4px;background:#E1E6EE}
+.prog i.on{background:var(--teal)}
+.pair{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--soft)}
+.pair .pt{flex:1;display:flex;flex-direction:column}
+.pair .pt strong{color:var(--navy)}
+.pair .pt span{font-size:12.5px;color:var(--muted)}
+.pair>svg{width:26px;height:26px;color:var(--teal)}
+.ok-tag{display:flex;align-items:center;gap:4px;color:var(--teal);font-weight:700;font-size:14px}
+.ok-tag svg{width:18px;height:18px}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid #C9D3E3;border-top-color:var(--teal);animation:sp .8s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.big-ok{width:64px;height:64px;border-radius:50%;background:var(--teal-soft);color:var(--teal);display:grid;place-items:center;align-self:center}
+.big-ok svg{width:32px;height:32px}
+.center{text-align:center}
+.notif{background:#1A2537;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.notif .n{background:rgba(255,255,255,.95);border-radius:16px;padding:11px 13px;display:flex;flex-direction:column;gap:3px}
+.notif .n .nh{display:flex;justify-content:space-between;font-size:12px;color:#5D6A80;font-weight:600}
+.notif .n .nh span:first-child{display:flex;align-items:center;gap:6px}
+.notif .n .nh i{width:16px;height:16px;border-radius:5px;background:var(--navy);display:inline-block}
+.notif .n strong{color:var(--navy);font-size:14.5px}
+.notif .n p{font-size:13.5px;color:var(--ink)}
+.notif .cap{color:#AEB8C8;font-size:11.5px;text-align:center}
+.recip{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1.5px solid #CDD5E1;background:#fff;text-align:left}
+.recip:hover:not(:disabled){background:var(--soft)}
+.recip>svg{width:24px;height:24px;color:var(--teal)}
+.recip .pt{flex:1;display:flex;flex-direction:column}
+.recip .pt strong{color:var(--navy)}
+.recip .pt span{font-size:12.5px;color:var(--muted)}
+
+.toast{position:absolute;left:16px;right:16px;bottom:84px;z-index:30;background:var(--navy);color:#fff;border-radius:14px;padding:11px 14px;font-size:14px;font-weight:600;display:flex;gap:8px;align-items:center;box-shadow:0 10px 24px -8px rgba(15,31,61,.5);animation:up .25s}
+.toast svg{width:18px;height:18px;color:#7FD3CB}
+.toast[hidden]{display:none!important}
+
+#printArea{display:none}
+
+@media (max-width:560px){
+  .stage{padding:12px 16px 16px;gap:12px;justify-content:flex-start}
+  .bar{gap:8px}
+}
+/* On a real phone the app fills the screen, at exactly the viewport height. */
+@media (max-width:560px) and (pointer:coarse){
+  .stage{padding:0;gap:0;justify-content:flex-start;height:100vh;height:100dvh;overflow:hidden;background:#fff}
+  .bar{width:100%;padding:8px max(12px,env(safe-area-inset-left,0px)) 8px max(12px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);gap:8px}
+  .brand{font-size:16px}.brand .mark{width:28px;height:28px}
+  .tier button{padding:6px 10px;font-size:13px}
+  .reset{padding:7px 10px;font-size:13px}
+  .device{width:100%;max-width:none;height:auto;flex:1 1 0;min-height:0;max-height:100%;border-radius:0;padding:0;box-shadow:none;background:#fff}
+  .screen{border-radius:0}
+  .sb{display:none}
+}
+@media (max-width:360px){.reset span{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff}
+  .stage{display:none!important}
+  #printArea{display:block;padding:24px;font-family:var(--f-body);color:#000}
+  #printArea .rep{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <header class="bar">
+    <div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#7FD3CB" stroke-width="2.2" stroke-linecap="round"><path d="M10 3c3.2 0 5 3 5 7s-1 5-1 7.5S12.4 22 10.4 22 7 20 7 17s1-4.5 0-7S6.8 3 10 3z"/></svg></span>StepSure</div>
+    <div class="tier" role="radiogroup" aria-label="Plan" id="tier"></div>
+    <button class="reset" data-action="reset" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg><span>Reset</span></button>
+  </header>
+  <div class="device">
+    <div class="screen" id="app">
+      <div class="sb" aria-hidden="true"><span id="clock">19:42</span><span class="notch"></span><span class="sys"><svg class="i" viewBox="0 0 24 24"><path d="M2 18h2M7 15v3M12 11v7M17 7v11"/></svg><svg class="i" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2M5 10v4M8 10v4M11 10v4"/></svg></span></div>
+      <main class="view" id="view" aria-live="off"></main>
+      <nav class="tabs" id="tabs" aria-label="Main"></nav>
+      <div class="layer" id="layer" hidden></div>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+  </div>
+</div>
+<div id="printArea"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=m=>{m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+const FRAMED=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+const P={
+ home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/>',
+ trend:'<path d="M3 17l5-5 4 4 8-8"/><path d="M15 8h5v5"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+ bt:'<path d="M7 7l10 10-5 4V3l5 4L7 17"/>',
+ alert:'<path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.5v.01"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+ checkc:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>',
+ send:'<path d="M4 12 20 4l-6 16-3-7z"/>',
+ file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/>',
+ share:'<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>',
+ back:'<path d="M15 6l-6 6 6 6"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ therm:'<path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z"/>',
+ gauge:'<path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+ print:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',
+ download:'<path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+ copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+ unplug:'<path d="M3 3l18 18"/><path d="M9 7H7a5 5 0 0 0 0 10h2"/><path d="M15 7h2a5 5 0 0 1 3.6 8.5"/><path d="M8 12h2"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.2.3 3.8 2 4.5 4.5"/>',
+ clinic:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
+ edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5v.01"/>',
+ foot:'<path d="M10 3c3.2 0 5 3 5 7s-1 5-1 7.5S12.4 22 10.4 22 7 20 7 17s1-4.5 0-7S6.8 3 10 3z"/>',
+ refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+ eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>'
+};
+const ic=(n,c)=>`<svg class="i${c?' '+c:''}" viewBox="0 0 24 24" aria-hidden="true">${P[n]||''}</svg>`;
+const adv=()=>`<span class="adv">${ic('spark')}Advanced</span>`;
+
+/* ---------- sample data ---------- */
+const DAYS=['17','18','19','20','21','22','23','24','25','26','27','28','29','30']; // October 2026
+const DOW=['Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri'];
+const TDIFF=[0.4,0.6,0.3,0.5,0.7,0.5,0.4,0.6,0.5,0.8,0.6,0.5,0.7,0.4];
+const R_M1=[29.7,29.9,29.6,29.8,30.0,29.5,29.7,29.9,29.8,30.1,29.9,29.8,29.9,30.0];
+const PRESS_L=[402,415,398,420,411,388,405,418,409,422,414,407,416,410];
+const PRESS_R=[371,380,366,384,377,360,372,379,370,386,378,373,380,375];
+const WEAR=[9.1,8.4,8.8,7.9,9.3,3.1,8.6,9.0,8.2,8.7,9.4,8.1,8.9,7.2];
+const TEMP={L:{hal:29.8,m1:30.4,m3:30.1,m5:29.6,mid:30.9,heel:30.2},R:{hal:29.6,m1:30.0,m3:29.9,m5:29.5,mid:30.7,heel:30.0}};
+const PRESS={L:{hal:262,m1:410,m3:334,m5:208,mid:92,heel:381},R:{hal:248,m1:375,m3:318,m5:221,mid:88,heel:364}};
+const THR=2.2;
+const tdiff=()=>{const a=TDIFF.slice();if(S.alert){a[12]=2.4;a[13]=2.6;}return a};
+const temps=()=>{const t={L:{...TEMP.L},R:{...TEMP.R}};if(S.alert){t.L.m1=32.6;t.L.m3=30.9;}return t};
+
+const SYM_FORM=['warmth','redness','swelling','pain','blister','wound','discharge','numbness','none'];
+const SYM={en:{warmth:'Warmth',redness:'Redness',swelling:'Swelling',pain:'Pain or tenderness',blister:'Blister',wound:'Open wound or cut',discharge:'Discharge or fluid',numbness:'Change in numbness',none:'No symptoms noticed',no_visible:'No redness, swelling or broken skin seen'},
+ hi:{warmth:'गर्माहट',redness:'लालिमा',swelling:'सूजन',pain:'दर्द या छूने पर दर्द',blister:'छाला',wound:'खुला घाव या कट',discharge:'मवाद या तरल निकलना',numbness:'सुन्नपन में बदलाव',none:'कोई लक्षण महसूस नहीं हुआ',no_visible:'कोई लालिमा, सूजन या कटी त्वचा नहीं दिखी'}};
+const FIT=['Insoles match your shoe size (UK 6) and lie flat, with no folds or curling','Your heel sits fully back against the end of the insole','The toe end has not been trimmed past the marked cut line','You are wearing socks and your usual shoes','Nothing is stuck under the insole, such as a seam, stone or old insert'];
+
+/* ---------- state ---------- */
+let S, epoch=0, lastSheet=null, toastTimer=null;
+function init(){
+ epoch++;
+ S={tier:'free',screen:'home',mapMode:'temp',trend:'temp',clock:19*60+42,
+  dev:{L:{on:true,bat:78,sync:19*60+38,since:null},R:{on:true,bat:64,sync:19*60+38,since:null}},
+  gaps:[],alert:null,symptoms:[],shares:[],reportAt:null,
+  care:{on:false,since:null,notice:null},
+  clin:{contacted:null,instr:null},follow:null,
+  chat:{lang:'en',stage:null,msgs:[],draft:'',pend:[]},listening:false,
+  sheet:null,form:null,setup:null,instr:null};
+}
+const tick=(n=1)=>{S.clock+=n;return S.clock};
+const isAdv=()=>S.tier==='adv';
+const anyOff=()=>!S.dev.L.on||!S.dev.R.on;
+const alertOpen=()=>!!S.alert&&!S.follow;
+const lastSym=()=>S.symptoms[S.symptoms.length-1]||null;
+const sideName=k=>k==='L'?'Left':'Right';
+
+/* ---------- small components ---------- */
+function seg(key,opts,val,full){
+ return `<div class="seg${full?' full':''}" role="radiogroup">${opts.map(o=>`<button type="button" role="radio" aria-checked="${o[0]===val}" data-action="seg" data-k="${key}" data-v="${o[0]}">${o[2]?ic(o[2]):''}${o[1]}</button>`).join('')}</div>`;
+}
+function backBar(label,to){return `<button class="back" type="button" data-action="go" data-to="${to}">${ic('back')}${label}</button>`}
+function offText(){
+ const off=['L','R'].filter(k=>!S.dev[k].on);
+ if(off.length===2) return `Both insoles not connected since ${fmt(Math.min(S.dev.L.since,S.dev.R.since))}.`;
+ return `${sideName(off[0])} insole not connected since ${fmt(S.dev[off[0]].since)}.`;
+}
+function lastSync(){return fmt(Math.max(S.dev.L.sync,S.dev.R.sync))}
+
+/* heatmap foot map: drawn from the live readings, cached per state */
+const HW=300,HH=306,HS=2,OY=14;
+const SOLE="M52 252C34 252 26 238 26 218C26 196 32 178 30 158C28 136 20 118 20 96C20 74 34 60 56 58C78 56 98 60 103 78C108 96 101 110 93 126C85 142 77 154 79 174C81 194 85 210 82 228C80 244 68 252 52 252Z";
+const TOES=[[88,34,13,17],[66,27,8.5,11],[51,30,7.5,9.5],[38,37,6.5,8.5],[28,48,5.5,7.5]];
+const SEN={hal:[88,36],m1:[87,84],m3:[62,78],m5:[33,100],mid:[37,162],heel:[54,222]};
+const CHIP={hal:[88,35],m1:[97,79],m3:[57,95],m5:[31,108],mid:[37,162],heel:[54,222]};
+const FEET=[{k:'L',ox:22,mir:false},{k:'R',ox:158,mir:true}];
+const HMIN={press:0,temp:28.5},HMAX={press:560,temp:33.5};
+const HCACHE={};
+let HMASK=null;
+const jet=t=>{t=Math.max(0,Math.min(1,.08+t*.92));const f=c=>Math.round(255*Math.max(0,Math.min(1,1.5-Math.abs(4*t-c))));return [f(3),f(2),f(1)]};
+const gs=(dx,dy,s)=>Math.exp(-(dx*dx+dy*dy)/(2*s*s));
+function pField(v,x,y){
+ let p=v.heel*gs(x-54,y-224,17)+v.m1*gs(x-86,y-84,14)+v.m3*gs(x-63,y-78,13)+v.m5*gs(x-34,y-100,12)+v.mid*1.2*gs(x-37,y-165,16)+v.hal*gs(x-88,y-34,10);
+ [[66,27],[51,30],[38,37],[28,48]].forEach((t,i)=>{p+=(150-i*25)*gs(x-t[0],y-t[1],6.5)});
+ return p;
+}
+function tField(v,x,y){let sw=.06,st=.06*29.6;
+ for(const z in SEN){const [sx,sy]=SEN[z],w=gs(x-sx,y-sy,z==='m1'?15:z==='mid'||z==='heel'?24:18);sw+=w;st+=w*v[z]}
+ return st/sw;
+}
+function footPath(){const p=new Path2D(SOLE);TOES.forEach(t=>{p.moveTo(t[0]+t[2],t[1]);p.ellipse(t[0],t[1],t[2],t[3],0,0,Math.PI*2)});return p}
+function getMask(){
+ if(HMASK) return HMASK;
+ const c=document.createElement('canvas');c.width=HW*HS;c.height=HH*HS;const x=c.getContext('2d');x.scale(HS,HS);
+ FEET.forEach(f=>{x.save();x.translate(f.mir?f.ox+120:f.ox,OY);if(f.mir)x.scale(-1,1);x.fill(footPath());x.restore()});
+ HMASK=x.getImageData(0,0,c.width,c.height).data;return HMASK;
+}
+function heatImg(mode){
+ const vals=mode==='temp'?temps():PRESS;
+ const key=mode+(S.alert?'a':'')+(S.dev.L.on?'L':'')+(S.dev.R.on?'R':'');
+ if(HCACHE[key]) return HCACHE[key];
+ try{
+  const c=document.createElement('canvas');c.width=HW*HS;c.height=HH*HS;const x=c.getContext('2d');
+  const m=getMask(),img=x.createImageData(c.width,c.height),d=img.data,lo=HMIN[mode],span=HMAX[mode]-lo;
+  for(let py=0;py<c.height;py++)for(let px=0;px<c.width;px++){
+   const i=(py*c.width+px)*4,a=m[i+3];if(!a)continue;
+   const X=px/HS,Y=py/HS,f=X<HW/2?FEET[0]:FEET[1];if(!S.dev[f.k].on)continue;
+   const lx=f.mir?f.ox+120-X:X-f.ox,ly=Y-OY;
+   const v=mode==='press'?pField(vals[f.k],lx,ly):tField(vals[f.k],lx,ly);
+   const col=jet((v-lo)/span);d[i]=col[0];d[i+1]=col[1];d[i+2]=col[2];d[i+3]=a;
+  }
+  x.putImageData(img,0,0);
+  x.globalCompositeOperation='destination-over';x.filter='blur(12px)';x.globalAlpha=.35;x.drawImage(c,0,0);x.filter='none';x.globalAlpha=1;x.globalCompositeOperation='source-over';
+  x.scale(HS,HS);
+  FEET.forEach(f=>{if(S.dev[f.k].on)return;x.save();x.translate(f.mir?f.ox+120:f.ox,OY);if(f.mir)x.scale(-1,1);const p=footPath();x.fillStyle='#EEF1F5';x.fill(p);x.setLineDash([4,4]);x.strokeStyle='#B3BCC9';x.lineWidth=1.5;x.stroke(p);x.restore()});
+  HCACHE[key]=c.toDataURL('image/png');
+ }catch(e){HCACHE[key]=''}
+ return HCACHE[key];
+}
+function legend(m){
+ const stops=[];for(let i=0;i<=12;i++){const t=i/12;stops.push(`rgb(${jet(t).join(',')}) ${(t*100).toFixed(0)}%`)}
+ const t=m==='temp'?['28.5 °C','31 °C','33.5 °C']:['0 kPa','280 kPa','560 kPa'];
+ return `<div class="legend"><span class="ltitle">${m==='temp'?'Skin temperature, °C':'Peak pressure, kPa'}</span><div class="ramp" style="background:linear-gradient(90deg,${stops.join(',')})"></div><div class="ticks"><span>${t[0]}</span><span>${t[1]}</span><span>${t[2]}</span></div></div>`;
+}
+function footMap(mode){
+ const vals=mode==='temp'?temps():PRESS,src=heatImg(mode);
+ const pct=(x,y)=>`left:${(x/HW*100).toFixed(2)}%;top:${(y/HH*100).toFixed(2)}%`;
+ let chips='';
+ FEET.forEach(f=>{
+  const d=S.dev[f.k],cx=f.ox+60;
+  if(!d.on){chips+=`<span class="hm-off" style="${pct(cx,OY+128)}"><b>No signal</b>since ${fmt(d.since)}</span>`;}
+  else for(const z in CHIP){const [sx,sy]=CHIP[z],X=f.mir?f.ox+120-sx:f.ox+sx,v=vals[f.k][z],hot=mode==='temp'&&S.alert&&f.k==='L'&&z==='m1';
+   chips+=`<span class="hm-chip${hot?' hot':''}" style="${pct(X,sy+OY)}">${mode==='temp'?v.toFixed(1)+(hot?'°':''):v}</span>`}
+  chips+=`<span class="hm-lab" style="${pct(cx,294)}">${f.k==='L'?'LEFT':'RIGHT'}</span>`;
+ });
+ const lbl=mode==='temp'?`Temperature heatmap. ${['L','R'].map(k=>S.dev[k].on?`${sideName(k)} foot ${Object.values(vals[k]).map(v=>v.toFixed(1)).join(', ')} °C`:`${sideName(k)} foot no signal`).join('. ')}`:`Pressure heatmap. ${['L','R'].map(k=>S.dev[k].on?`${sideName(k)} foot ${Object.values(vals[k]).join(', ')} kPa`:`${sideName(k)} foot no signal`).join('. ')}`;
+ return `<div class="hm" role="img" aria-label="${esc(lbl)}">${src?`<img src="${src}" alt="">`:''}<div aria-hidden="true">${chips}</div></div>`;
+}
+
+/* charts */
+function chart(o){
+ const W=320,H=o.h||178,L=32,R=10,T=16,B=26,iw=W-L-R,ih=H-T-B,n=14;
+ const X=i=>o.bars?L+(i+.5)*iw/n:L+6+i*(iw-12)/(n-1);
+ const Y=v=>T+ih-(v-o.min)/(o.max-o.min)*ih;
+ let g=`<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#F4F6F9"/><line x1="0" y1="0" x2="0" y2="6" stroke="#D3D9E2" stroke-width="2.5"/></pattern></defs>`;
+ o.ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" class="c-grid"/><text x="${L-6}" y="${Y(t)+3.5}" class="c-ylab" text-anchor="end">${t}</text>`});
+ [0,3,6,9,13].forEach(i=>{g+=`<text x="${X(i)}" y="${H-8}" class="c-xlab" text-anchor="${i===13?'end':i===0?'start':'middle'}">${i===13?'Today':i===0?'17 Oct':DAYS[i]}</text>`});
+ if(o.incomplete) g+=`<rect x="${X(13)-9}" y="${T}" width="18" height="${ih}" class="c-gap"/>`;
+ if(o.target!=null) g+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.target)}" y2="${Y(o.target)}" class="c-target"/><text x="${W-R}" y="${Y(o.target)-5}" class="c-glab" text-anchor="end">${o.targetLabel}</text>`;
+ if(o.thr!=null) g+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.thr)}" y2="${Y(o.thr)}" class="c-thr"/><text x="${L+4}" y="${Y(o.thr)-5}" class="c-tlab">${o.thrLabel}</text>`;
+ if(o.bars) o.bars.forEach((v,i)=>{const c=i===5?'c-bar partial':i===13?'c-bar today':'c-bar';g+=`<rect x="${(X(i)-6).toFixed(1)}" y="${Y(v).toFixed(1)}" width="12" height="${(Y(o.min)-Y(v)).toFixed(1)}" rx="3" class="${c}"/>`});
+ (o.series||[]).forEach(s=>{
+  const last=s.cut?12:13;
+  const pts=s.v.map((v,i)=>[X(i),Y(v)]);
+  const d=pts.slice(0,last+1).map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  if(s.area) g+=`<path d="${d} L${pts[last][0].toFixed(1)} ${Y(o.min)} L${pts[0][0].toFixed(1)} ${Y(o.min)}Z" class="c-area" fill="${s.color}"/>`;
+  g+=`<path d="${d}" class="c-line" stroke="${s.color}"/>`;
+  pts.forEach((p,i)=>{
+   if(i>last) return;
+   const hot=o.thr!=null&&s.v[i]>=o.thr, partial=i===5;
+   const r=hot||i===last?4.2:2.8;
+   g+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}" fill="${partial?'#fff':hot?'#E7A23A':s.color}" stroke="${partial?s.color:'#fff'}" stroke-width="${partial?1.8:1.3}"/>`;
+  });
+ });
+ return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(o.label)}">${g}</svg>`;
+}
+function tempChart(h){
+ const v=tdiff();
+ return chart({h,min:0,max:3.5,ticks:[0,1,2,3],thr:THR,thrLabel:'Alert level 2.2 °C',incomplete:anyOff(),
+  series:[{v,color:'#0D7A76',area:true,cut:anyOff()}],
+  label:`Daily left minus right temperature difference at the 1st metatarsal, 17 to 30 October: ${v.map((x,i)=>DAYS[i]+' Oct '+x+' °C').join(', ')}`});
+}
+
+/* ---------- screens ---------- */
+function banners(){
+ let o='';
+ if(alertOpen()) o+=`<button type="button" class="banner warn" data-action="go" data-to="alert">${ic('alert')}<span class="b-txt"><strong>Temperature change needs attention</strong><span>Your left forefoot has read warmer than the right for 2 days.</span></span><span class="b-cta">View${ic('chev')}</span></button>`;
+ if(anyOff()) o+=`<button type="button" class="banner off" data-action="go" data-to="device">${ic('unplug')}<span class="b-txt"><strong>Monitoring incomplete</strong><span>${offText()} Readings from that foot are missing.</span></span><span class="b-cta">Fix${ic('chev')}</span></button>`;
+ if(S.alert&&S.follow) o+=`<div class="banner done">${ic('checkc')}<span class="b-txt"><strong>Follow-up completed at ${fmt(S.follow)}</strong><span>Your insoles keep recording. Any new change will show here.</span></span></div>`;
+ if(!S.alert&&!anyOff()) o+=`<div class="banner ok">${ic('checkc')}<span class="b-txt"><strong>No unusual changes in today's readings</strong><span>Keep up your daily foot check. Readings don't replace it.</span></span></div>`;
+ return o;
+}
+function deviceCard(){
+ const side=k=>{const d=S.dev[k];return `<span class="ins${d.on?'':' is-off'}"><span class="ins-top">${ic('foot')}${sideName(k)}</span><span class="batt"><span class="batt-bar"><i style="width:${d.bat}%"></i></span><span class="num">${d.bat}%</span></span><span class="ins-st">${d.on?'Connected':'Not connected'}</span></span>`};
+ return `<button type="button" class="card" data-action="go" data-to="device" aria-label="Insoles: ${S.dev.L.on?'left connected':'left not connected'}, ${S.dev.R.on?'right connected':'right not connected'}. Open insole settings">
+  <span class="card-head"><span class="h3">Insoles</span><span class="link-s">Manage${ic('chev')}</span></span>
+  <span class="ins-row">${side('L')}${side('R')}</span>
+  <span class="meta-row"><span>${ic('refresh')}Synced ${lastSync()}</span><span>${ic('clock')}Worn 7.2 h today</span><span class="${anyOff()?'q-bad':'q-ok'}">${anyOff()?'Data incomplete':'Data quality good'}</span></span></button>`;
+}
+function followSummary(){
+ if(S.follow) return `Follow-up completed at ${fmt(S.follow)}`;
+ if(S.alert){const n=[S.symptoms.length,S.shares.length,S.clin.contacted,S.clin.instr].filter(Boolean).length;return `Open follow-up · ${n} of 4 steps done`}
+ return 'Last 14 days of readings · no open follow-up';
+}
+function home(){
+ return `<div class="pad">
+  <header class="greet"><p class="eyebrow">Friday, 30 October</p><h1>Good evening, Meera</h1></header>
+  ${banners()}
+  ${deviceCard()}
+  <section class="card">
+   <div class="card-head"><h2 class="h3">Today's foot map</h2>${seg('mapMode',[['press','Pressure','gauge'],['temp','Temperature','therm']],S.mapMode)}</div>
+   ${footMap(S.mapMode)}
+   ${legend(S.mapMode)}
+   <p class="note">${S.mapMode==='temp'?`Latest skin temperature under each of 6 sensors per foot, synced ${lastSync()}. Matching spots on both feet are compared.`:'Highest pressure recorded today under each sensor. Higher values mean more load on that area.'}</p>
+  </section>
+  <button type="button" class="card row-card" data-action="go" data-to="report">${ic('file')}<span class="rc-txt"><strong>Reports and follow-up</strong><span>${followSummary()}</span></span>${ic('chev')}</button>
+  ${S.alert?'':`<div class="demo-row"><button type="button" class="demo-link" data-action="simulate">Simulate alert</button></div>`}
+ </div>`;
+}
+function device(){
+ const card=k=>{const d=S.dev[k];return `<section class="card ins-card${d.on?'':' is-off'}">
+  <div class="card-head"><h2 class="h3">${sideName(k)} insole</h2><span class="status ${d.on?'s-ok':'s-warn'}">${d.on?'Connected':'Not connected'}</span></div>
+  <dl class="kv"><div><dt>Battery</dt><dd>${d.bat}%</dd></div><div><dt>Last sync</dt><dd>${fmt(d.sync)}</dd></div><div><dt>Sensors</dt><dd>${d.on?'6 of 6 reporting':'No signal'}</dd></div><div><dt>Size</dt><dd>UK 6</dd></div></dl>
+  <button type="button" class="btn ${d.on?'secondary':'primary'} sm" data-action="toggleDev" data-k="${k}">${d.on?ic('unplug')+'Disconnect':ic('bt')+'Reconnect'}</button></section>`};
+ const n=(S.dev.L.on?6:0)+(S.dev.R.on?6:0);
+ return `<div class="pad">${backBar('Home','home')}<h1 class="title">Insoles</h1>
+  ${anyOff()?`<div class="banner off">${ic('unplug')}<span class="b-txt"><strong>Monitoring incomplete</strong><span>${offText()} StepSure can't compare your feet until both insoles are connected.</span></span></div>`:''}
+  ${card('L')}${card('R')}
+  <section class="card"><h2 class="h3">Data quality</h2>
+   <dl class="kv"><div><dt>Wear today</dt><dd>7.2 h so far</dd></div><div><dt>Sensors reporting</dt><dd>${n} of 12</dd></div><div><dt>Personal baseline</dt><dd>Established</dd></div><div><dt>Baseline period</dt><dd>14 Sep to 11 Oct</dd></div></dl>
+   <p class="note">Your baseline comes from 28 days of regular wear. Alerts compare matching spots on your left and right feet, alongside this baseline.</p></section>
+  <button type="button" class="btn secondary" data-action="openSetup">${ic('bt')}Set up insoles again</button>
+ </div>`;
+}
+function trends(){
+ const m=S.trend,v=tdiff(),off=anyOff();
+ let body='';
+ if(m==='temp'){
+  const hot=v[13]>=THR;
+  body=`<section class="card"><div><h2 class="h3">Left minus right temperature</h2><p class="sub">Daily difference at the 1st metatarsal (ball of the foot, big-toe side), °C</p></div>
+   ${tempChart()}
+   <div class="c-key"><span><i style="background:#0D7A76"></i>Daily difference</span><span><i class="hollow"></i>Partial day</span>${off?'<span><i class="dot" style="background:#D3D9E2"></i>Incomplete today</span>':''}</div>
+   <div class="stat-row"><div class="stat${hot?' warn':''}"><b>${off?'–':v[13].toFixed(1)+' °C'}</b><span>Today${off?', incomplete':''}</span></div><div class="stat${v[12]>=THR?' warn':''}"><b>${v[12].toFixed(1)} °C</b><span>Yesterday</span></div><div class="stat"><b>0.5 °C</b><span>Typical for you</span></div></div>
+   <p class="note">${S.alert?'The difference has stayed above the alert level for 2 days in a row. Readings show a change but can\'t explain its cause.':'Your left and right feet have stayed within 1 °C of each other at this spot for the last 14 days.'}</p></section>`;
+ } else if(m==='press'){
+  body=`<section class="card"><div><h2 class="h3">Peak pressure</h2><p class="sub">Highest daily pressure at the 1st metatarsal, kPa</p></div>
+   ${chart({min:300,max:450,ticks:[300,350,400,450],incomplete:off,series:[{v:PRESS_L,color:'#2459C2',cut:!S.dev.L.on},{v:PRESS_R,color:'#0D7A76',cut:!S.dev.R.on}],label:'Peak pressure 17 to 30 October, left around 400 to 420 kPa, right around 370 to 385 kPa'})}
+   <div class="c-key"><span><i style="background:#2459C2"></i>Left</span><span><i style="background:#0D7A76"></i>Right</span><span><i class="hollow"></i>Partial day</span></div>
+   <div class="stat-row"><div class="stat"><b>${S.dev.L.on?'410':'–'}</b><span>Left today, kPa</span></div><div class="stat"><b>${S.dev.R.on?'375':'–'}</b><span>Right today, kPa</span></div><div class="stat"><b>Steady</b><span>14-day pattern</span></div></div>
+   <p class="note">Pressure has stayed in a similar range on both feet. Your care team can use this when reviewing footwear.</p></section>`;
+ } else {
+  body=`<section class="card"><div><h2 class="h3">Wear time</h2><p class="sub">Hours of insole wear per day</p></div>
+   ${chart({min:0,max:10,ticks:[0,2,4,6,8,10],target:8,targetLabel:'Aim: 8 h',bars:WEAR,label:'Daily wear hours 17 to 30 October, mostly 8 to 9 hours, 3.1 hours on 22 October, 7.2 hours so far today'})}
+   <div class="c-key"><span><i class="dot" style="background:#0D7A76"></i>Full day</span><span><i class="dot" style="background:#C4CBD6"></i>Low wear</span><span><i class="dot" style="background:#8BC7C2"></i>Today so far</span></div>
+   <div class="stat-row"><div class="stat"><b>8.6 h</b><span>Daily average</span></div><div class="stat"><b>12 of 13</b><span>Full days</span></div><div class="stat"><b>7.2 h</b><span>Today so far</span></div></div></section>`;
+ }
+ return `<div class="pad"><header><h1 class="title">Trends</h1><p class="sub">17 to 30 October 2026</p></header>
+  ${seg('trend',[['temp','Temperature'],['press','Pressure'],['wear','Wear']],m,true)}
+  ${body}
+  <section class="card soft"><h2 class="h3">Data quality</h2><ul class="list">${gapList().map(g=>`<li>${ic(g.live?'unplug':'info')}<span><b>${g.t}.</b> ${g.d}</span></li>`).join('')}</ul></section>
+ </div>`;
+}
+function gapList(){
+ const g=[{t:'Thu 22 Oct',d:'Low wear, 3.1 h recorded. Readings for that day are partial.'}];
+ S.gaps.forEach(x=>g.push({t:'Today',d:`${sideName(x.k)} insole disconnected ${fmt(x.from)} to ${fmt(x.to)}. No readings from that foot in this window.`}));
+ ['L','R'].forEach(k=>{const d=S.dev[k];if(!d.on)g.push({t:'Today',d:`${sideName(k)} insole not connected since ${fmt(d.since)}. Readings from that foot are missing.`,live:true})});
+ g.push({t:'Today',d:'Day in progress, 7.2 h worn so far.'});
+ return g;
+}
+function tracker(){
+ const sym=lastSym(),sh=S.shares[S.shares.length-1],c=S.care,n=c.notice;
+ let riya;
+ if(!isAdv()) riya={dot:'na',s:c.on?'Caregiver coordination is inactive on Free. Past updates stay in your records.':'Advanced feature, inactive on Free.',act:`<button type="button" class="act" data-action="upgrade" data-f="Caregiver sharing">See Advanced</button>`};
+ else if(!c.on) riya={dot:'na',s:n?'Sharing turned off. Riya gets no new updates.':'Sharing with Riya is off.',act:`<button type="button" class="act" data-action="consent">Turn on</button>`};
+ else if(!n) riya={dot:'',s:'Not sent',act:alertOpen()?`<button type="button" class="act" data-action="notify">Preview</button>`:''};
+ else riya={dot:n.ack?'on':'mid',s:'',act:n.ack?'':`<button type="button" class="act" data-action="ack">Riya opens it</button>`};
+ const pipe=n?`<div class="pipe"><span class="p on">Sent ${fmt(n.sent)}</span>${ic('chev')}<span class="p${n.ack?' on':''}">${n.ack?'Acknowledged '+fmt(n.ack):'Not acknowledged yet'}</span></div>`:'';
+ return `<ul class="track">
+  <li><span class="dot${sym?' on':''}"></span><span class="tt"><strong>Symptoms confirmed</strong><span>${sym?`Recorded ${fmt(sym.time)}`:'Not recorded yet'}</span></span>${sym?'':`<button type="button" class="act" data-action="openForm">Check in</button>`}</li>
+  <li><span class="dot${sh?' on':''}"></span><span class="tt"><strong>Report shared</strong><span>${sh?`With ${esc(sh.to)}, ${fmt(sh.time)}`:'Not shared yet'}</span></span>${sh?'':`<button type="button" class="act" data-action="share">Share</button>`}</li>
+  <li><span class="dot ${riya.dot}"></span><span class="tt"><strong>Riya notified ${isAdv()?'':adv()}</strong>${riya.s?`<span>${riya.s}</span>`:''}${isAdv()&&c.on?pipe:''}</span>${riya.act}</li>
+  <li><span class="dot${S.clin.contacted?' on':''}"></span><span class="tt"><strong>Clinician contacted</strong><span>${S.clin.contacted?`You marked this at ${fmt(S.clin.contacted)}`:'Not yet. Mark it once you have spoken to them.'}</span></span>${S.clin.contacted?'':`<button type="button" class="act" data-action="contacted">Mark done</button>`}</li>
+  <li><span class="dot${S.clin.instr?' on':''}"></span><span class="tt"><strong>Clinician instructions</strong><span>${S.clin.instr?`Recorded by you at ${fmt(S.clin.instr.at)}`:'Not recorded'}</span></span>${S.clin.instr?'':`<button type="button" class="act" data-action="instr">Record</button>`}</li>
+  <li><span class="dot${S.follow?' on':''}"></span><span class="tt"><strong>Follow-up</strong><span>${S.follow?`Completed at ${fmt(S.follow)}`:'Open'}</span></span></li>
+ </ul>`;
+}
+function alertScr(){
+ if(!S.alert) return `<div class="pad">${backBar('Home','home')}<h1 class="title">No active alert</h1><p class="sub">There is no alert to review right now.</p></div>`;
+ const visible=lastSym()&&lastSym().items.some(x=>['redness','swelling','wound','discharge','blister'].includes(x));
+ return `<div class="pad">${backBar('Home','home')}
+  <header><p class="eyebrow" style="color:var(--amber)">${S.follow?'Alert · follow-up completed':'Alert · needs attention'}</p><h1 class="title">Left forefoot warmer than right</h1><p class="sub">Detected 30 Oct at ${fmt(S.alert.at)}. Present on 29 and 30 Oct.</p></header>
+  <section class="card"><div class="card-head"><h2 class="h3">What changed</h2></div>
+   <div class="stat-row"><div class="stat warn"><b>32.6°</b><span>Left, 1st metatarsal</span></div><div class="stat"><b>30.0°</b><span>Right, same spot</span></div><div class="stat warn"><b>+2.6°</b><span>Difference today (yesterday +2.4°)</span></div></div>
+   ${tempChart(150)}
+   <p class="note">Other spots on both feet are within 1 °C of each other. Pressure readings have not changed.</p></section>
+  <div class="callout info">${ic('info')}<span><b>What this can and can't tell you.</b> A difference above 2.2 °C that lasts 2 days is a change worth checking. Readings can't tell what's causing it, and they can't diagnose a foot problem.</span></div>
+  <section class="card"><div class="card-head"><h2 class="h3">Next steps</h2><span class="ess">Included in every plan</span></div>
+   <ol class="steps"><li>Check both feet now in good light. Use a mirror or ask someone to help. Look for redness, swelling, blisters, cuts or broken skin.</li>
+   <li>Record what you notice, even if you see nothing unusual.</li>
+   <li>${visible?'Because you recorded a visible change, contact your doctor or foot-care team today.':'Contact your doctor or foot-care team soon, ideally within a day, and describe the change.'}</li>
+   <li class="urg">Get urgent care today if you see an open wound or discharge, if redness is spreading, or if you feel feverish or unwell.</li></ol>
+   <div class="btn-row"><button type="button" class="btn primary sm" data-action="openForm">${ic('edit')}Symptom check-in</button><button type="button" class="btn secondary sm" data-action="prepare">${ic('file')}Prepare report</button></div>
+   ${isAdv()?`<div class="btn-row"><button type="button" class="btn secondary sm" data-action="go" data-to="assistant">${ic('chat')}Talk it through</button><button type="button" class="btn secondary sm" data-action="${S.care.on?'notify':'consent'}">${ic('users')}${S.care.on?'Notify Riya':'Share with Riya'}</button></div>`
+   :`<button type="button" class="locked" data-action="upgrade" data-f="Assistant and caregiver sharing">${ic('lock')}<span><strong>Talk it through or notify Riya</strong><br>Available with Advanced</span></button>`}
+  </section>
+  <section class="card"><h2 class="h3">Follow-up</h2>${tracker()}</section>
+ </div>`;
+}
+function reportHTML(forPrint){
+ const t=temps(),v=tdiff(),sym=S.symptoms,gen=S.reportAt||S.clock;
+ const rows=[11,12,13].map(i=>{const r=R_M1[i],d=v[i],l=+(r+d).toFixed(1);const off=i===13&&!S.dev.L.on;return `<tr><td>${DOW[i]} ${DAYS[i]} Oct</td><td>${off?'No data':l.toFixed(1)}</td><td>${r.toFixed(1)}</td><td class="${d>=THR&&!off?'hot':''}">${off?'–':'+'+d.toFixed(1)}</td></tr>`}).join('');
+ const symHTML=sym.length?`<ul>${sym.map(s=>`<li>${fmt(s.time)}, 30 Oct: ${s.items.map(x=>SYM.en[x]).join(', ')}${s.foot?`. ${s.foot[0].toUpperCase()+s.foot.slice(1)} foot, ${s.area.toLowerCase()}`:''}. Since: ${s.onset}.${s.note?' Note: “'+esc(s.note)+'”.':''} <span style="color:var(--muted)">(Confirmed by Meera via ${s.source==='assistant'?'assistant':'symptom form'})</span></li>`).join('')}</ul>`:'<p>No symptoms recorded in this period.</p>';
+ const rich=isAdv();
+ return `<div class="rep">
+  <div class="rep-head"><h2>StepSure foot report</h2><p class="note">Meera, 52 · 17 to 30 Oct 2026 · Generated 30 Oct 2026, ${fmt(gen)}</p></div>
+  ${rich?`<div class="rep-sec"><h3>Summary ${forPrint?'':adv()}</h3><p>${S.alert?`Over the last 2 days, the sensor under Meera's left 1st metatarsal read 2.4 to 2.6 °C warmer than the same spot on her right foot, above her usual difference of about 0.5 °C. ${sym.length?`She confirmed: ${sym[sym.length-1].items.map(x=>SYM.en[x].toLowerCase()).join(', ')}.`:'No symptoms have been recorded yet.'} Pressure and wear time were steady. ${S.clin.contacted?'She has contacted her clinician.':'She has not yet marked her clinician as contacted.'}`:'Readings over the last 14 days stayed within Meera\'s usual range. Left and right feet stayed within 1 °C at matching spots. Wear time averaged 8.6 hours a day.'}</p></div>`:''}
+  <div class="rep-sec"><h3>Alert</h3><p>${S.alert?`Persistent temperature difference, left forefoot (1st metatarsal). Detected 30 Oct at ${fmt(S.alert.at)}; present on 29 and 30 Oct.`:'No alerts in this period.'}</p></div>
+  <div class="rep-sec"><h3>Temperature at 1st metatarsal, °C</h3><div class="tbl-wrap"><table><thead><tr><th>Day</th><th>Left</th><th>Right</th><th>Difference</th></tr></thead><tbody>${rows}</tbody></table></div>
+   ${rich&&!forPrint?`<div style="margin-top:8px">${tempChart(150)}</div>`:''}
+   <p class="note" style="margin-top:6px">Personal baseline established 14 Sep to 11 Oct. Typical difference about 0.5 °C. Peak pressure today: left ${S.dev.L.on?'410':'no data'}, right ${S.dev.R.on?'375':'no data'} kPa. Average wear 8.6 h a day.</p></div>
+  <div class="rep-sec"><h3>Data gaps</h3><ul>${gapList().map(g=>`<li>${g.t}: ${g.d}</li>`).join('')}</ul></div>
+  <div class="rep-sec"><h3>Confirmed symptoms</h3>${symHTML}</div>
+  <div class="rep-sec"><h3>Clinician</h3><p>${S.clin.contacted?`Contacted (marked by Meera at ${fmt(S.clin.contacted)}).`:'Not marked as contacted.'}</p>${S.clin.instr?`<p style="margin-top:6px"><b>Instructions recorded by Meera</b> at ${fmt(S.clin.instr.at)}, from ${esc(S.clin.instr.by)}: “${esc(S.clin.instr.text)}”</p>`:'<p style="margin-top:6px">No clinician instructions recorded.</p>'}</div>
+  ${rich||S.care.notice?`<div class="rep-sec"><h3>Caregiver updates</h3><p>${S.care.notice?`Update sent to Riya at ${fmt(S.care.notice.sent)}. ${S.care.notice.ack?`Acknowledged at ${fmt(S.care.notice.ack)}.`:'Not acknowledged yet.'}`:'No updates sent.'} ${S.care.on?(isAdv()?'Sharing is on.':'Sharing is inactive on the Free plan.'):'Sharing is off.'}</p></div>`:''}
+  <div class="rep-sec"><h3>Follow-up</h3><p>${S.follow?`Marked completed by Meera at ${fmt(S.follow)}.`:'Open.'}</p></div>
+  <p class="rep-foot">Readings can't diagnose the cause of a change. Prepared by the patient to discuss with her care team. No one monitors these readings continuously.</p>
+ </div>`;
+}
+function report(){
+ return `<div class="pad">${backBar(S.alert?'Alert':'Home',S.alert?'alert':'home')}
+  <header class="card-head"><h1 class="title">Report and follow-up</h1></header>
+  <section class="card"><h2 class="h3">Follow-up tracker</h2>${tracker()}</section>
+  <section class="card">${reportHTML(false)}
+   ${isAdv()?'':`<button type="button" class="locked" data-action="upgrade" data-f="Richer report summaries">${ic('lock')}<span><strong>Plain-language summary and trend chart</strong><br>Included with Advanced</span></button>`}
+  </section>
+  <div class="actions">
+   <button type="button" class="btn primary" data-action="share">${ic('share')}Share report</button>
+   <button type="button" class="btn secondary" data-action="instr">${ic('edit')}${S.clin.instr?'Edit instructions':'Record clinician instructions'}</button>
+   <button type="button" class="btn secondary wide" data-action="complete" ${S.follow||!S.alert?'disabled':''}>${ic('checkc')}${S.follow?'Follow-up completed':S.alert?'Mark follow-up completed':'No open follow-up'}</button>
+   ${FRAMED?`<button type="button" class="btn secondary wide" data-action="copyReport">${ic('copy')}Copy report text</button>`:`<button type="button" class="btn secondary" data-action="print">${ic('print')}Print</button><button type="button" class="btn secondary" data-action="download">${ic('download')}Download</button>`}
+  </div>
+ </div>`;
+}
+function profile(){
+ const c=S.care;
+ let care;
+ if(isAdv()){
+  care=`<section class="card"><div class="card-head"><h2 class="h3">Caregiver sharing</h2>${adv()}</div>
+   <div class="who"><div class="avatar" style="width:44px;height:44px;font-size:18px;background:var(--blue-soft);color:var(--blue)">R</div><div style="flex:1"><strong style="color:var(--navy)">Riya</strong><p class="note">Daughter · ${c.on?`Sharing on since ${fmt(c.since)}`:'Sharing off'}</p></div>
+   <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Share updates with Riya" data-action="${c.on?'revoke':'consent'}"></button></div>
+   <p class="note">Riya receives only the alerts, symptoms and reports you choose to send. She can't see live readings.</p>
+   <button type="button" class="btn secondary sm" data-action="notify">${ic('eye')}Preview Riya's notification</button></section>`;
+ } else {
+  care=`<section class="card"><div class="card-head"><h2 class="h3">Caregiver sharing</h2>${adv()}</div>
+   <p class="note">${c.on?'<b style="color:var(--navy)">Inactive on Free.</b> Riya won\'t receive new updates while you\'re on Free. Your records and past updates are unchanged.':'Send alerts and reports to a family member, and see when they\'ve read them.'}</p>
+   <button type="button" class="locked" data-action="upgrade" data-f="Caregiver sharing">${ic('lock')}<span><strong>${c.on?'Resume sharing with Riya':'Share with Riya'}</strong><br>Available with Advanced</span></button></section>`;
+ }
+ return `<div class="pad"><h1 class="title">Profile</h1>
+  <section class="card"><div class="who"><div class="avatar">M</div><div><strong style="color:var(--navy);font-size:17px">Meera</strong><p class="note">52 · Type 2 diabetes · Reduced feeling in both feet</p></div></div></section>
+  <section class="card"><div class="card-head"><h2 class="h3">Plan</h2>${isAdv()?adv():'<span class="ess">Free</span>'}</div>
+   <p class="note">${isAdv()?'Advanced adds the assistant, voice check-ins, richer report summaries and caregiver sharing.':'Free includes monitoring, trends, alerts, next steps, symptom logging and basic reports.'}</p>
+   <button type="button" class="btn ${isAdv()?'secondary':'primary'} sm" data-action="tier" data-tier="${isAdv()?'free':'adv'}">${isAdv()?'Switch to Free':'Switch to Advanced'}</button></section>
+  ${care}
+  <section class="card"><h2 class="h3">Care team</h2><div class="who">${ic('clinic')}<div><strong style="color:var(--navy)">Dr. Anjali Rao</strong><p class="note">Diabetic foot clinic</p></div></div>
+   <p class="note">StepSure doesn't send readings to your clinic automatically. You choose what to share.</p></section>
+  <button type="button" class="card row-card" data-action="go" data-to="report">${ic('file')}<span class="rc-txt"><strong>Reports and follow-up</strong><span>${followSummary()}</span></span>${ic('chev')}</button>
+  <button type="button" class="card row-card" data-action="go" data-to="device">${ic('bt')}<span class="rc-txt"><strong>Insoles</strong><span>${anyOff()?'Monitoring incomplete':'Both connected'} · synced ${lastSync()}</span></span>${ic('chev')}</button>
+ </div>`;
+}
+
+/* ---------- assistant ---------- */
+const T={
+ en:{
+  disc:'The assistant explains your records and helps organise follow-up. It doesn\'t diagnose or prescribe.',
+  ph:'Type a message', listen:'Listening', vt:'Voice · transcript', speak:'Tap the mic to speak',
+  greet_alert:'Hi Meera. Your left forefoot has read warmer than the same spot on your right foot for 2 days in a row. What have you noticed about your feet today?',
+  greet_none:'Hi Meera. There are no new alerts today. I can explain your readings or help you note anything you\'ve noticed about your feet.',
+  greet_done:'Hi Meera. Your follow-up for the temperature change is marked complete. I can explain your readings or help you note anything new.',
+  u_warm:'My left foot feels warmer', u_nothing:'I haven\'t noticed anything', u_meaning:'What does this alert mean?',
+  a_meaning:'It means the sensor under your left forefoot has stayed more than 2.2 °C warmer than the matching sensor on your right foot for 2 days. A difference like this can have many causes, and the readings can\'t tell which one. That\'s why it\'s worth checking your feet and telling your care team. What have you noticed today?',
+  a_more:'Thanks, I\'ve noted warmth in your left foot. When you look at that area, do you see any redness, swelling or broken skin?',
+  u_none_visible:'No, nothing I can see', u_red:'Some redness', u_swell:'Some swelling',
+  a_confirm:p=>`Here's what I'll record: ${symList(p.items,'en')} ${p.items.includes('none')?'(today)':'(left foot, front area, noticed today)'}. Is this correct?`,
+  u_yes:'Yes, record this', u_change:'Change something', a_change:'No problem. I\'ve opened the symptom form so you can edit the details.',
+  a_done:p=>{const v=p.items.some(x=>x==='redness'||x==='swelling');const part=p.items.includes('none')?'you haven\'t noticed any symptoms':p.items.includes('redness')?'you noticed warmth and some redness there today':p.items.includes('swelling')?'you noticed warmth and some swelling there today':'you noticed warmth there today, with no redness, swelling or broken skin';
+   const adv=p.items.includes('none')?'A difference that lasts is still worth mentioning, so please contact your doctor or foot-care team soon, ideally within a day.':v?'Because you can see a change, please contact your doctor or foot-care team today.':'Please contact your doctor or foot-care team soon, ideally within a day, and describe what you\'ve noticed.';
+   return `Saved at ${p.time}. Summary: your left forefoot has read up to 2.6 °C warmer than the right for 2 days, and ${part}. Readings can't show what's causing this. ${adv} Shall I prepare a report you can share with them?`},
+  a_saved:p=>`Saved at ${p.time}: ${p.items.map(x=>SYM.en[x].toLowerCase()).join(', ')}. Readings can't show what's causing a change. If you're unsure what to do next, contact your doctor or foot-care team. Shall I prepare a report?`,
+  u_report:'Prepare report', a_report:'Done. Your report is ready in Reports. It includes your readings, data gaps and the symptoms you confirmed.',
+  u_notify:'Let Riya know', a_notify:'I\'ve opened a preview of the update for Riya. Nothing is sent until you choose Send.', a_notify_off:'Sharing with Riya is off. You can turn it on in Profile.',
+  u_restart:'Start over',
+  u_readings:'Explain my readings', a_readings:'Today both insoles read between 29.5 and 30.9 °C, and your left and right feet are within 1 °C of each other at every matching spot. You\'ve worn the insoles for 7.2 hours today. These readings don\'t replace your daily foot check.',
+  a_readings_alert:'Your left forefoot is still reading 2.6 °C warmer than the right. Your follow-up is marked complete. If anything changes, record it and contact your care team.',
+  a_readings_off:'One insole isn\'t connected, so today\'s readings are incomplete and I can\'t compare your feet. Reconnect it from the Insoles card on Home.',
+  u_log:'Log a symptom', a_log:'I\'ve opened the symptom form. You can record anything you\'ve noticed.',
+  a_fallback:'Sorry, I didn\'t follow that. Right now I can help with your current alert, your symptoms and your report. Try one of the suggestions below.',
+  a_med:'I can\'t recommend medicines or treatments. Your doctor or foot-care team can advise you on that.',
+  a_diag:'I can\'t tell what\'s causing a change or whether it\'s an ulcer. Only a clinician who examines your foot can do that.',
+  v_ask:'My left foot feels a bit warmer than the right one.', v_more:'No, I can\'t see any redness or swelling.', v_confirm:'Yes, that\'s right.', v_done:'Please prepare the report.', v_idle:'How are my readings today?'
+ },
+ hi:{
+  disc:'असिस्टेंट आपके रिकॉर्ड समझाती है और फ़ॉलो-अप व्यवस्थित करने में मदद करती है। यह बीमारी की पहचान नहीं करती और दवा नहीं बताती।',
+  ph:'संदेश लिखें', listen:'सुन रही हूँ', vt:'आवाज़ · ट्रांसक्रिप्ट', speak:'बोलने के लिए माइक दबाएँ',
+  greet_alert:'नमस्ते मीरा। पिछले 2 दिनों से आपके बाएँ पैर के आगे के हिस्से का तापमान दाएँ पैर की उसी जगह से ज़्यादा दर्ज हुआ है। आज आपने अपने पैरों में क्या महसूस किया?',
+  greet_none:'नमस्ते मीरा। आज कोई नया अलर्ट नहीं है। मैं आपकी रीडिंग समझा सकती हूँ, या आपने जो महसूस किया उसे दर्ज करने में मदद कर सकती हूँ।',
+  greet_done:'नमस्ते मीरा। तापमान बदलाव का आपका फ़ॉलो-अप पूरा दर्ज है। मैं आपकी रीडिंग समझा सकती हूँ या कुछ नया दर्ज करने में मदद कर सकती हूँ।',
+  u_warm:'मेरा बायाँ पैर ज़्यादा गर्म लग रहा है', u_nothing:'मुझे कुछ अलग महसूस नहीं हुआ', u_meaning:'इस अलर्ट का क्या मतलब है?',
+  a_meaning:'इसका मतलब है कि आपके बाएँ पैर के आगे वाले सेंसर का तापमान 2 दिनों से दाएँ पैर के उसी सेंसर से 2.2 °C से ज़्यादा रहा है। ऐसे अंतर के कई कारण हो सकते हैं, और रीडिंग से कारण पता नहीं चलता। इसलिए पैरों की जाँच करना और अपनी केयर टीम को बताना ज़रूरी है। आज आपने क्या महसूस किया?',
+  a_more:'धन्यवाद, मैंने आपके बाएँ पैर में गर्माहट नोट की है। उस जगह को देखने पर क्या आपको लालिमा, सूजन या कटी-फटी त्वचा दिखती है?',
+  u_none_visible:'नहीं, कुछ नहीं दिखता', u_red:'थोड़ी लालिमा है', u_swell:'थोड़ी सूजन है',
+  a_confirm:p=>`मैं यह दर्ज करूँगी: ${symList(p.items,'hi')} ${p.items.includes('none')?'(आज)':'(बायाँ पैर, आगे का हिस्सा, आज महसूस हुआ)'}। क्या यह सही है?`,
+  u_yes:'हाँ, दर्ज करें', u_change:'कुछ बदलना है', a_change:'ठीक है। मैंने लक्षण फ़ॉर्म खोल दिया है, वहाँ आप जानकारी बदल सकती हैं।',
+  a_done:p=>{const v=p.items.some(x=>x==='redness'||x==='swelling');const part=p.items.includes('none')?'आपने कोई लक्षण महसूस नहीं किया':p.items.includes('redness')?'आज आपने वहाँ गर्माहट और थोड़ी लालिमा देखी':p.items.includes('swelling')?'आज आपने वहाँ गर्माहट और थोड़ी सूजन देखी':'आज आपने वहाँ गर्माहट महसूस की, और कोई लालिमा, सूजन या कटी त्वचा नहीं दिखी';
+   const adv=p.items.includes('none')?'लगातार बना अंतर फिर भी बताने लायक है, इसलिए कृपया जल्द ही, हो सके तो एक दिन के अंदर, अपने डॉक्टर या फ़ुट-केयर टीम से संपर्क करें।':v?'क्योंकि आपको बदलाव दिख रहा है, कृपया आज ही अपने डॉक्टर या फ़ुट-केयर टीम से संपर्क करें।':'कृपया जल्द ही, हो सके तो एक दिन के अंदर, अपने डॉक्टर या फ़ुट-केयर टीम से संपर्क करें और जो महसूस हुआ वह बताएँ।';
+   return `${p.time} पर सेव किया गया। सारांश: 2 दिनों से आपके बाएँ पैर का आगे का हिस्सा दाएँ से 2.6 °C तक ज़्यादा गर्म दर्ज हुआ है, और ${part}। रीडिंग से इसका कारण पता नहीं चलता। ${adv} क्या मैं उनके साथ शेयर करने के लिए रिपोर्ट तैयार कर दूँ?`},
+  a_saved:p=>`${p.time} पर सेव किया गया: ${p.items.map(x=>SYM.hi[x]).join(', ')}। रीडिंग से बदलाव का कारण पता नहीं चलता। आगे क्या करना है, इस बारे में शक हो तो अपने डॉक्टर या फ़ुट-केयर टीम से संपर्क करें। क्या मैं रिपोर्ट तैयार कर दूँ?`,
+  u_report:'रिपोर्ट तैयार करें', a_report:'हो गया। आपकी रिपोर्ट Reports में तैयार है। इसमें आपकी रीडिंग, डेटा में कमी और आपके पुष्टि किए गए लक्षण शामिल हैं।',
+  u_notify:'रिया को बताएँ', a_notify:'मैंने रिया के लिए अपडेट का प्रीव्यू खोला है। जब तक आप Send नहीं चुनतीं, कुछ नहीं भेजा जाएगा।', a_notify_off:'रिया के साथ शेयरिंग बंद है। आप इसे Profile में चालू कर सकती हैं।',
+  u_restart:'फिर से शुरू करें',
+  u_readings:'मेरी रीडिंग समझाइए', a_readings:'आज दोनों इनसोल में तापमान 29.5 से 30.9 °C के बीच है, और हर मिलती-जुलती जगह पर बाएँ और दाएँ पैर का अंतर 1 °C के अंदर है। आज आपने 7.2 घंटे इनसोल पहने। ये रीडिंग रोज़ की पैरों की जाँच की जगह नहीं लेतीं।',
+  a_readings_alert:'आपके बाएँ पैर का आगे का हिस्सा अब भी दाएँ से 2.6 °C ज़्यादा गर्म दर्ज हो रहा है। आपका फ़ॉलो-अप पूरा दर्ज है। कुछ भी बदले तो उसे दर्ज करें और अपनी केयर टीम से संपर्क करें।',
+  a_readings_off:'एक इनसोल कनेक्ट नहीं है, इसलिए आज की रीडिंग अधूरी है और मैं दोनों पैरों की तुलना नहीं कर सकती। होम पर Insoles कार्ड से उसे फिर से कनेक्ट करें।',
+  u_log:'लक्षण दर्ज करें', a_log:'मैंने लक्षण फ़ॉर्म खोल दिया है। आपने जो भी महसूस किया, वहाँ दर्ज कर सकती हैं।',
+  a_fallback:'माफ़ कीजिए, मैं समझ नहीं पाई। अभी मैं आपके अभी के अलर्ट, लक्षणों और रिपोर्ट में मदद कर सकती हूँ। नीचे दिए सुझावों में से कोई चुनें।',
+  a_med:'मैं दवा या इलाज की सलाह नहीं दे सकती। इसके लिए अपने डॉक्टर या फ़ुट-केयर टीम से पूछें।',
+  a_diag:'मैं यह नहीं बता सकती कि बदलाव किस वजह से है या यह अल्सर है या नहीं। यह सिर्फ़ वही डॉक्टर बता सकते हैं जो आपके पैर की जाँच करें।',
+  v_ask:'मेरा बायाँ पैर दाएँ पैर से थोड़ा ज़्यादा गर्म लग रहा है।', v_more:'नहीं, कोई लालिमा या सूजन नहीं दिख रही।', v_confirm:'हाँ, यह सही है।', v_done:'कृपया रिपोर्ट तैयार कर दीजिए।', v_idle:'आज मेरी रीडिंग कैसी है?'
+ }
+};
+const SYMC={en:{warmth:'warmth',no_visible:'no redness, swelling or broken skin seen',redness:'some redness',swelling:'some swelling',none:'no symptoms noticed'},hi:{warmth:'गर्माहट',no_visible:'कोई लालिमा, सूजन या कटी त्वचा नहीं दिखी',redness:'थोड़ी लालिमा',swelling:'थोड़ी सूजन',none:'कोई लक्षण महसूस नहीं हुआ'}};
+function symList(items,l){return items.map(x=>SYMC[l][x]).join('; ')}
+function tx(k,p){const v=T[S.chat.lang][k]!=null?T[S.chat.lang][k]:T.en[k];return typeof v==='function'?v(p||{}):v}
+function startChat(){
+ const c=S.chat;c.msgs=[];c.pend=[];
+ if(alertOpen()){c.stage='ask';say('greet_alert')}
+ else {c.stage='idle';say(S.alert?'greet_done':'greet_none')}
+}
+function say(k,p){S.chat.msgs.push({from:'a',key:k,p})}
+function chips(){
+ const st=S.chat.stage;
+ const m={ask:['warm','nothing','meaning'],more:['none_visible','red','swell'],confirm:['yes','change'],idle:['readings','log'],done:['report']};
+ const a=(m[st]||[]).slice();
+ if(st==='done'){if(isAdv()&&S.care.on&&!S.care.notice)a.push('notify');a.push('restart')}
+ return a;
+}
+function classify(t){
+ t=t.toLowerCase().trim();const st=S.chat.stage;
+ if(!t) return null;
+ if(/medic|tablet|\bpill|cream|ointment|antibiot|remed|treatment|dawa|dawai|दवा|दवाई|मरहम|इलाज|ilaj/.test(t)) return 'med';
+ if(/ulcer|diagnos|infect|अल्सर|संक्रमण|बीमारी|bimari/.test(t)) return 'diag';
+ if(/report|रिपोर्ट/.test(t)) return 'report';
+ if(/riya|रिया|notify|daughter|बेटी/.test(t)) return 'notify';
+ if(/start over|restart|फिर से शुरू/.test(t)) return 'restart';
+ if(/^(no|nope|nahi|nahin|na)\b|nothing|kuch nahi|नहीं|कुछ नहीं/.test(t)) return st==='more'?'none_visible':st==='confirm'?'change':'nothing';
+ if(/warm|\bhot\b|heat|garam|garm|गर्म|गरम/.test(t)) return 'warm';
+ if(/\bred|laal|\blal\b|लाल/.test(t)) return 'red';
+ if(/swell|sooj|sujan|सूज/.test(t)) return 'swell';
+ if(/^(yes|yeah|yep|ok|okay|correct|right|sure|haan|han|ha|ji|sahi)\b|हाँ|हां|सही/.test(t)) return 'yes';
+ if(/change|edit|बदल/.test(t)) return 'change';
+ if(/reading|रीडिंग/.test(t)) return 'readings';
+ if(/mean|why|explain|matlab|मतलब|क्यों|samjha|समझा/.test(t)) return st==='idle'?'readings':'meaning';
+ if(/symptom|\blog\b|लक्षण/.test(t)) return 'log';
+ return 'unknown';
+}
+function respond(intent){
+ const c=S.chat;
+ if(intent==='med'){say('a_med');return}
+ if(intent==='diag'){say('a_diag');return}
+ if(intent==='notify'){if(isAdv()&&S.care.on&&S.alert){say('a_notify');openSheet({t:'notify'})}else if(!S.care.on){say('a_notify_off')}else say('a_fallback');return}
+ if(intent==='report'){S.reportAt=S.reportAt||tick();say('a_report');setTimeout(()=>{go('report');toast('Report prepared')},650);if(c.stage!=='idle')c.stage='done';return}
+ if(intent==='log'){say('a_log');openForm(null,true);return}
+ switch(c.stage){
+  case 'ask':
+   if(intent==='warm'){c.pend=['warmth'];c.stage='more';say('a_more')}
+   else if(intent==='nothing'){c.pend=['none'];c.stage='confirm';say('a_confirm',{items:c.pend})}
+   else if(intent==='meaning') say('a_meaning');
+   else say('a_fallback');
+   break;
+  case 'more':
+   if(intent==='none_visible'||intent==='nothing') c.pend=['warmth','no_visible'];
+   else if(intent==='red') c.pend=['warmth','redness'];
+   else if(intent==='swell') c.pend=['warmth','swelling'];
+   else {say('a_fallback');break}
+   c.stage='confirm';say('a_confirm',{items:c.pend});break;
+  case 'confirm':
+   if(intent==='yes'){
+    const none=c.pend.includes('none');
+    const rec=saveSymptom({items:c.pend.filter(x=>x!=='no_visible').length?c.pend.slice():['none'],foot:none?null:'left',area:none?null:'Forefoot',onset:'today',note:'',source:'assistant'});
+    c.stage='done';say('a_done',{items:c.pend.slice(),time:fmt(rec.time)});
+   } else if(intent==='change'){say('a_change');openForm({items:c.pend.filter(x=>x!=='no_visible'),foot:c.pend.includes('none')?null:'left',area:c.pend.includes('none')?null:'Forefoot'},true)}
+   else say('a_fallback');
+   break;
+  case 'done':
+   say('a_fallback');break;
+  default:
+   if(intent==='readings') say(anyOff()?'a_readings_off':S.alert?'a_readings_alert':'a_readings');
+   else say('a_fallback');
+ }
+}
+function userIntent(intent,raw,vt){
+ if(intent==='restart'){startChat();render();return}
+ S.chat.msgs.push(vt?{from:'u',vt}:raw!=null?{from:'u',raw}:{from:'u',key:'u_'+intent});
+ respond(intent);render();
+}
+function assistant(){
+ if(!isAdv()){
+  return `<div class="pad"><header class="card-head"><h1 class="title">Assistant</h1>${adv()}</header>
+   <div class="pv"><div class="mini"><div class="msg a">${esc(T.en.greet_alert)}</div><div class="msg u">${ic('mic')} ${esc(T.en.v_ask)}</div><div class="msg a">Thanks, I've noted warmth in your left foot. Do you see any redness, swelling or broken skin?</div></div>
+    <ul class="list"><li>${ic('chat')}<span>Talk or type in English or Hindi</span></li><li>${ic('mic')}<span>Voice check-ins that turn into a written record</span></li><li>${ic('file')}<span>Richer report summaries and help organising follow-up</span></li></ul>
+    <button type="button" class="btn primary" data-action="tier" data-tier="adv">${ic('spark')}Switch to Advanced</button></div>
+   ${S.chat.msgs.length>1?'<p class="note">Your earlier assistant conversation is kept. Switch back to Advanced to continue it.</p>':''}
+   <section class="card"><div class="card-head"><h2 class="h3">Record symptoms</h2><span class="ess">Included in Free</span></div>
+    <p class="note">Use the structured check-in to record what you notice. Alerts and next steps are always included.</p>
+    <button type="button" class="btn secondary" data-action="openForm">${ic('edit')}Open symptom check-in</button></section>
+  </div>`;
+ }
+ const c=S.chat;
+ if(!c.stage) startChat();
+ if(c.stage==='idle'&&alertOpen()&&!c.msgs.some(m=>m.from==='u')) startChat();
+ const msgs=c.msgs.map(m=>{
+  if(m.from==='a') return `<div class="msg a">${esc(tx(m.key,m.p))}</div>`;
+  if(m.vt) return `<div class="msg u"><span class="vt">${ic('mic')}${tx('vt')}</span>${esc(m.vt[c.lang])}</div>`;
+  return `<div class="msg u">${esc(m.raw!=null?m.raw:tx(m.key))}</div>`;
+ }).join('');
+ return `<div class="chat-top"><div class="row"><h1 class="title">Assistant</h1>${seg('lang',[['en','English'],['hi','हिंदी']],c.lang)}</div><p class="disc">${tx('disc')}</p></div>
+  <div class="msgs" id="msgs" aria-live="polite">${msgs}</div>
+  <div class="chips">${chips().map(k=>`<button type="button" class="chip" data-action="chip" data-v="${k}">${esc(tx('u_'+k))}</button>`).join('')}</div>
+  <div class="composer"><input id="chat_in" type="text" autocomplete="off" placeholder="${tx('ph')}" aria-label="${tx('ph')}" data-input="chat" value="${esc(c.draft)}">
+   <button type="button" class="ibtn mic" data-action="voice" aria-label="Voice check-in">${ic('mic')}</button>
+   <button type="button" class="ibtn send" data-action="chatSend" aria-label="Send">${ic('send')}</button></div>
+  ${S.listening?`<div class="listen" role="status"><div class="rings"><i></i><i></i><i></i><b>${ic('mic')}</b></div><div class="wave">${'<i></i>'.repeat(9)}</div><p>${tx('listen')}</p></div>`:''}`;
+}
+
+/* ---------- sheets ---------- */
+function openSheet(s){S.sheet=s}
+function closeSheet(){S.sheet=null;S.form=null;S.setup=null;render()}
+function head(title,sub,extra){return `<div class="grab"></div><div class="p-head"><div><h2 id="sheet-title">${title}</h2>${sub?`<p class="sub">${sub}</p>`:''}</div><button type="button" class="x" data-action="close" aria-label="Close">${ic('x')}</button></div>${extra||''}`}
+function openForm(pre,fromChat){
+ S.form={fromChat:!!fromChat,step:'edit',items:pre&&pre.items?pre.items.slice():[],foot:pre&&pre.foot!==undefined?pre.foot:(S.alert?'left':null),area:pre&&pre.area!==undefined?pre.area:(S.alert?'Forefoot':null),onset:'today',note:'',err:''};
+ openSheet({t:'form'});
+}
+function sheetForm(){
+ const f=S.form;
+ const opt=(act,v,label,on,role)=>`<button type="button" class="opt" ${role==='radio'?`role="radio" aria-checked="${on}"`:`aria-pressed="${on}"`} data-action="${act}" data-v="${v}">${ic('check')}${label}</button>`;
+ const none=f.items.includes('none');
+ if(f.step==='review'){
+  const urg=f.items.some(x=>x==='wound'||x==='discharge');
+  return head('Confirm your symptoms','Check these details before saving.')+`
+   <section class="card soft"><ul class="list">${f.items.map(x=>`<li>${ic('check')}<span>${SYM.en[x]}</span></li>`).join('')}</ul>
+    ${none?'':`<dl class="kv"><div><dt>Foot</dt><dd>${f.foot?f.foot[0].toUpperCase()+f.foot.slice(1):'Not set'}</dd></div><div><dt>Area</dt><dd>${f.area||'Not set'}</dd></div><div><dt>Since</dt><dd>${f.onset}</dd></div></dl>`}
+    ${f.note?`<p class="note">Note: “${esc(f.note)}”</p>`:''}</section>
+   ${urg?`<div class="callout urgent">${ic('alert')}<span><b>Open wounds or discharge need prompt care.</b> Contact your foot-care team today. If you can't reach them, go to urgent care.</span></div>`:''}
+   <div class="btn-row"><button type="button" class="btn secondary" data-action="formEdit">Edit</button><button type="button" class="btn primary" data-action="formSave">Confirm and save</button></div>`;
+ }
+ return head('Symptom check-in','Look at both feet in good light. Record what you notice, even if it seems small.')+`
+  <fieldset><legend>What have you noticed?</legend><div class="opts checks">${SYM_FORM.map(c=>opt('formSym',c,SYM.en[c],f.items.includes(c))).join('')}</div></fieldset>
+  ${none?'':`<fieldset><legend>Which foot?</legend><div class="opts" role="radiogroup">${[['left','Left'],['right','Right'],['both','Both']].map(o=>opt('formFoot',o[0],o[1],f.foot===o[0],'radio')).join('')}</div></fieldset>
+  <fieldset><legend>Where on the foot?</legend><div class="opts" role="radiogroup">${[['Forefoot','Front (ball and toes)'],['Midfoot','Middle'],['Heel','Heel']].map(o=>opt('formArea',o[0],o[1],f.area===o[0],'radio')).join('')}</div></fieldset>`}
+  <fieldset><legend>Since when?</legend><div class="opts" role="radiogroup">${[['today','Today'],['1 to 2 days','1 to 2 days'],['more than 2 days','More than 2 days']].map(o=>opt('formOnset',o[0],o[1],f.onset===o[0],'radio')).join('')}</div></fieldset>
+  <label class="field" for="f_note">Anything else (optional)<textarea id="f_note" rows="2" data-input="formNote" placeholder="For example, when you first noticed it">${esc(f.note)}</textarea></label>
+  ${f.err?`<p class="err" role="alert">${f.err}</p>`:''}
+  <button type="button" class="btn primary" data-action="formReview">Review</button>`;
+}
+function saveSymptom(r){const rec={...r,time:tick(2)};S.symptoms.push(rec);return rec}
+function sheetSetup(){
+ const s=S.setup,st=s.step;
+ const prog=`<div class="prog" aria-label="Step ${Math.min(st+1,4)} of 4">${[0,1,2,3].map(i=>`<i class="${i<Math.max(st,1)?'on':''}"></i>`).join('')}</div>`;
+ if(st===0) return head('Set up your insoles','Pair, fit and check your insoles in about 2 minutes.')+prog+`
+  <ul class="list"><li>${ic('bt')}<span>Take both insoles out of the charging case. The light blinks blue when they're ready to pair.</span></li><li>${ic('foot')}<span>Have the shoes you wear most days nearby.</span></li></ul>
+  <button type="button" class="btn primary" data-action="setupNext">Start pairing</button>`;
+ if(st===1){
+  const row=k=>{const v=s[k];return `<div class="pair">${ic('foot')}<span class="pt"><strong>${sideName(k)} insole</strong><span>${v==='paired'?`StepSure ${k} · ${k==='L'?'4F2A':'4F2B'}`:v==='searching'?'Searching nearby':'Ready to pair'}</span></span>${v==='paired'?`<span class="ok-tag">${ic('check')}Paired</span>`:v==='searching'?'<span class="spin" aria-label="Searching"></span>':`<button type="button" class="btn primary sm" style="width:auto" data-action="pair" data-k="${k}">Pair</button>`}</div>`};
+  return head('Pair both insoles','Pair left, then right.')+prog+row('L')+row('R')+`<button type="button" class="btn primary" data-action="setupNext" ${s.L==='paired'&&s.R==='paired'?'':'disabled'}>Continue</button>`;
+ }
+ if(st===2){
+  const all=FIT.every((_,i)=>s.fit[i]);
+  return head('Check the fit','Tick each item once you have checked it.')+prog+`<div class="opts checks">${FIT.map((f,i)=>`<button type="button" class="opt" aria-pressed="${!!s.fit[i]}" data-action="fit" data-v="${i}">${ic('check')}${f}</button>`).join('')}</div>
+  <div class="callout info">${ic('info')}<span>These checks help the sensors read well. StepSure can't confirm that your shoes or insoles fit safely. Ask your foot-care team to check your footwear.</span></div>
+  <button type="button" class="btn primary" data-action="setupNext" ${all?'':'disabled'}>Continue</button>`;
+ }
+ if(st===3){
+  return head('Sensor check','Stand still in your shoes while both insoles take a test reading.')+prog+
+  (s.check==='done'?`<section class="card soft"><ul class="list"><li>${ic('checkc')}<span>Left: 6 of 6 sensors responding</span></li><li>${ic('checkc')}<span>Right: 6 of 6 sensors responding</span></li></ul><p class="note">This checks the sensors only, not your shoe fit.</p></section><button type="button" class="btn primary" data-action="setupNext">Continue</button>`
+  :s.check==='run'?`<div class="pair"><span class="spin"></span><span class="pt"><strong>Reading sensors</strong><span>Keep standing still</span></span></div>`
+  :`<button type="button" class="btn primary" data-action="runCheck">Start check</button>`);
+ }
+ return head('Insoles ready','')+`<div class="big-ok">${ic('check')}</div><p class="center"><b style="color:var(--navy)">Both insoles are paired and recording.</b><br><span class="note">Wear them for at least 8 hours a day for complete data.</span></p><button type="button" class="btn primary" data-action="setupDone">Done</button>`;
+}
+function notifyBody(){
+ const sym=lastSym();
+ const body=S.alert?`Left forefoot has read warmer than the right for 2 days. ${sym?'Meera confirmed: '+sym.items.map(x=>SYM.en[x].toLowerCase()).join(', ')+'.':'No symptoms recorded yet.'} ${S.reportAt||S.shares.length?'A report is ready to view.':''}`:'Example: Meera shared an alert with you. Open StepSure to see the details she chose to share.';
+ return `<div class="notif"><div class="n"><div class="nh"><span><i></i>StepSure</span><span>now</span></div><strong>Update from Meera</strong><p>${esc(body)}</p></div><p class="cap">Preview of Riya's phone notification</p></div>`;
+}
+function sheetNotify(){
+ const n=S.care.notice;
+ let foot;
+ if(!S.care.on) foot=`<p class="note">Sharing with Riya is off.</p><button type="button" class="btn primary" data-action="consent">Turn on sharing</button>`;
+ else if(!S.alert) foot=`<p class="note">Updates go to Riya only when you choose to share an alert or report. There is nothing to send right now.</p><button type="button" class="btn secondary" data-action="close">Close</button>`;
+ else if(!n) foot=`<p class="note">Riya receives this once you send it.</p><button type="button" class="btn primary" data-action="sendNotice">${ic('send')}Send to Riya</button>`;
+ else foot=`<div class="pipe" style="font-size:13px"><span class="p on">Sent ${fmt(n.sent)}</span>${ic('chev')}<span class="p${n.ack?' on':''}">${n.ack?'Acknowledged '+fmt(n.ack):'Waiting for Riya'}</span></div>
+  <p class="note">Acknowledged means Riya opened the update. It doesn't mean a clinician has been contacted.</p>
+  ${n.ack?`<button type="button" class="btn secondary" data-action="close">Close</button>`:`<button type="button" class="btn secondary" data-action="ack">Riya opens it</button>`}`;
+ return head('Update for Riya',adv())+notifyBody()+foot;
+}
+function sheetConsent(){
+ return head('Share updates with Riya',adv())+`<ul class="list"><li>${ic('check')}<span>Riya gets alerts, symptoms you confirm and reports you choose to send.</span></li>
+  <li>${ic('x')}<span>Riya can't see live readings. No one watches your readings around the clock.</span></li>
+  <li>${ic('refresh')}<span>You can stop sharing at any time in Profile.</span></li></ul>
+  <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Not now</button><button type="button" class="btn primary" data-action="consentYes">Share with Riya</button></div>`;
+}
+function sheetRevoke(){
+ return head('Stop sharing with Riya?','')+`<p>Riya won't receive any new updates. Updates already sent stay in your records.</p>
+  <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Keep sharing</button><button type="button" class="btn primary" data-action="revokeYes">Stop sharing</button></div>`;
+}
+function sheetShare(){
+ const s=S.sheet;
+ if(s.done) return head('Report shared','')+`<div class="big-ok">${ic('check')}</div><p class="center"><b style="color:var(--navy)">Shared with ${esc(s.done)} at ${fmt(S.shares[S.shares.length-1].time)}</b></p>
+  <p class="note center">Sharing a report doesn't mark your clinician as contacted. Mark that in the follow-up tracker once you've spoken to them.</p><button type="button" class="btn primary" data-action="close">Done</button>`;
+ const riyaOk=isAdv()&&S.care.on;
+ return head('Share report','Choose who receives this report.')+`
+  <button type="button" class="recip" data-action="shareTo" data-v="Dr. Anjali Rao's clinic">${ic('clinic')}<span class="pt"><strong>Dr. Anjali Rao's clinic</strong><span>Diabetic foot clinic</span></span>${ic('chev')}</button>
+  ${riyaOk?`<button type="button" class="recip" data-action="shareTo" data-v="Riya">${ic('users')}<span class="pt"><strong>Riya</strong><span>Caregiver</span></span>${ic('chev')}</button>`
+  :`<button type="button" class="locked" data-action="${isAdv()?'consent':'upgrade'}" data-f="Caregiver sharing">${ic(isAdv()?'users':'lock')}<span><strong>Riya</strong><br>${isAdv()?'Turn on sharing first':'Caregiver sharing is inactive on Free'}</span></button>`}
+`;
+}
+function sheetInstr(){
+ const d=S.instr;
+ return head('Record clinician instructions','Write down what your clinician told you. StepSure doesn\'t add or change these.')+`
+  <label class="field" for="i_text">Instructions<textarea id="i_text" rows="4" data-input="instrText" placeholder="For example, what to do and when to come back">${esc(d.text)}</textarea></label>
+  <label class="field" for="i_by">Given by<input id="i_by" type="text" data-input="instrBy" value="${esc(d.by)}"></label>
+  <button type="button" class="opt" aria-pressed="${d.ok}" data-action="instrOk">${ic('check')}I confirm these are the instructions my clinician gave me</button>
+  ${d.err?`<p class="err" role="alert">${d.err}</p>`:''}
+  <button type="button" class="btn primary" data-action="instrSave">Save instructions</button>`;
+}
+function sheetComplete(){
+ const warn=!S.clin.contacted;
+ return head('Mark follow-up completed?','')+`<p>This closes the follow-up for the temperature change. Your insoles keep recording, and new changes will still show as alerts.</p>
+  ${warn?`<div class="callout urgent">${ic('alert')}<span>You haven't marked your clinician as contacted. Only complete the follow-up if you have spoken to your care team.</span></div>`:''}
+  <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Cancel</button><button type="button" class="btn primary" data-action="completeYes">Mark completed</button></div>`;
+}
+function sheetUpgrade(){
+ return head(esc(S.sheet.f||'Advanced feature'),adv())+`<ul class="list"><li>${ic('chat')}<span>Scripted assistant in English and Hindi, by text or voice</span></li><li>${ic('file')}<span>Richer report summaries with trend charts</span></li><li>${ic('users')}<span>Caregiver sharing with Riya</span></li></ul>
+  <div class="callout info">${ic('info')}<span>Alerts, next steps, symptom recording and basic reports are included in every plan.</span></div>
+  <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Not now</button><button type="button" class="btn primary" data-action="tier" data-tier="adv">Switch to Advanced</button></div>`;
+}
+const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade};
+
+/* ---------- render ---------- */
+const SCREENS={home,trends,assistant,profile,device,alert:alertScr,report};
+const TAB_OF={home:'home',device:'home',alert:'home',report:'home',trends:'trends',assistant:'assistant',profile:'profile'};
+function focusKey(el){if(!el||el===document.body)return null;if(el.id)return '#'+el.id;const d=el.dataset||{};if(!d.action)return null;return `[data-action="${d.action}"]${d.k?`[data-k="${d.k}"]`:''}${d.v!=null?`[data-v="${CSS.escape(d.v)}"]`:''}${d.to?`[data-to="${d.to}"]`:''}${d.tier?`[data-tier="${d.tier}"]`:''}`}
+function render(){
+ const fk=focusKey(document.activeElement);
+ const view=$('#view'),same=view.dataset.screen===S.screen,st=view.scrollTop;
+ const msgsEl=$('#msgs'),mst=msgsEl?msgsEl.scrollTop:0;
+ view.className='view'+(S.screen==='assistant'&&isAdv()?' chat':'');
+ view.innerHTML=SCREENS[S.screen]();
+ view.dataset.screen=S.screen;
+ if(same) view.scrollTop=st; else {view.scrollTop=0;view.classList.remove('enter');void view.offsetWidth;view.classList.add('enter')}
+ const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
+ const tab=TAB_OF[S.screen];
+ $('#tabs').innerHTML=[['home','Home','home'],['trends','Trends','trend'],['assistant','Assistant','chat'],['profile','Profile','user']].map(t=>`<button type="button" data-action="go" data-to="${t[0]}" ${tab===t[0]?'aria-current="page"':''}>${ic(t[2])}${t[1]}</button>`).join('');
+ $('#tier').innerHTML=`<button type="button" role="radio" aria-checked="${!isAdv()}" data-action="tier" data-tier="free">Free</button><button type="button" role="radio" aria-checked="${isAdv()}" data-action="tier" data-tier="adv">${ic('spark')}Advanced</button>`;
+ $('#clock').textContent=fmt(S.clock);
+ const layer=$('#layer');
+ if(S.sheet&&SHEETS[S.sheet.t]){
+  const isNew=lastSheet!==S.sheet.t;
+  layer.hidden=false;layer.className='layer'+(isNew?' anim':'');
+  layer.innerHTML=`<button type="button" class="scrim" data-action="close" aria-label="Close" tabindex="-1"></button><div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">${SHEETS[S.sheet.t]()}</div>`;
+  view.inert=true;$('#tabs').inert=true;
+  if(isNew){const p=layer.querySelector('.panel');p.focus({preventScroll:true})}
+  lastSheet=S.sheet.t;
+ } else {layer.hidden=true;layer.innerHTML='';view.inert=false;$('#tabs').inert=false;lastSheet=null}
+ if(fk){try{const el=document.querySelector(fk);if(el&&!el.closest('[inert]'))el.focus({preventScroll:true})}catch(e){}}
+}
+function go(to){S.screen=to;if(to==='report'&&S.alert)S.reportAt=S.reportAt||S.clock;render()}
+function toast(msg){const t=$('#toast');t.innerHTML=`${ic('checkc')}<span>${esc(msg)}</span>`;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.hidden=true},2600)}
+function later(ms,fn){const e=epoch;setTimeout(()=>{if(e===epoch)fn()},ms)}
+
+/* ---------- report export ---------- */
+function reportText(){
+ const tmp=document.createElement('div');tmp.innerHTML=reportHTML(true);
+ const lines=[];
+ tmp.querySelectorAll('.rep-head h2,.rep-head p,.rep-sec h3,.rep-sec p,.rep-sec li,.rep-sec tr,.rep-foot').forEach(el=>{
+  if(el.tagName==='TR') lines.push(Array.from(el.children).map(c=>c.textContent.trim()).join('  |  '));
+  else if(el.tagName==='H3'){lines.push('');lines.push(el.textContent.trim().toUpperCase())}
+  else if(el.tagName==='LI') lines.push('- '+el.textContent.trim());
+  else if(el.classList.contains('rep-foot')){lines.push('');lines.push(el.textContent.trim())}
+  else lines.push(el.textContent.trim());
+ });
+ return lines.join('\n');
+}
+function copyText(txt){
+ const fallback=()=>{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);toast(ok?'Report text copied':'Copy blocked by the browser. Select the report text instead.')};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast('Report text copied'),fallback)}else fallback();
+}
+
+/* ---------- actions ---------- */
+const A={
+ go:d=>{go(d.to)},
+ seg:d=>{if(d.k==='lang')S.chat.lang=d.v;else S[d.k]=d.v;render()},
+ tier:d=>{
+  if(S.tier===d.tier){if(S.sheet&&S.sheet.t==='upgrade')closeSheet();return}
+  S.tier=d.tier;
+  if(S.sheet&&(S.sheet.t==='upgrade'||(!isAdv()&&['notify','consent','revoke'].includes(S.sheet.t)))){S.sheet=null}
+  render();toast(isAdv()?'Advanced plan on':(S.care.on?'Free plan. Caregiver sharing is now inactive. Records are unchanged.':'Free plan. Your records are unchanged.'));
+ },
+ reset:()=>{init();render();toast('Reset')},
+ close:()=>closeSheet(),
+ simulate:()=>{
+  if(!S.dev.L.on){toast('Reconnect the left insole first. The alert needs its readings.');return}
+  const t=tick(2);['L','R'].forEach(k=>{if(S.dev[k].on)S.dev[k].sync=t});
+  S.alert={at:t};S.mapMode='temp';
+  if(S.chat.stage==='idle'&&!S.chat.msgs.some(m=>m.from==='u'))S.chat.stage=null;
+  render();toast('New alert');
+ },
+ toggleDev:d=>{
+  const v=S.dev[d.k];
+  if(v.on){v.on=false;v.since=tick();toast(`${sideName(d.k)} insole disconnected`)}
+  else{const t=tick(3);S.gaps.push({k:d.k,from:v.since,to:t});v.on=true;v.since=null;v.sync=t;toast(`${sideName(d.k)} insole reconnected and synced`)}
+  render();
+ },
+ openSetup:()=>{S.setup={step:0,L:'idle',R:'idle',fit:{},check:null};openSheet({t:'setup'});render()},
+ setupNext:()=>{S.setup.step++;render()},
+ pair:d=>{S.setup[d.k]='searching';render();later(1300,()=>{if(S.setup){S.setup[d.k]='paired';render()}})},
+ fit:d=>{S.setup.fit[d.v]=!S.setup.fit[d.v];render()},
+ runCheck:()=>{S.setup.check='run';render();later(1800,()=>{if(S.setup){S.setup.check='done';render()}})},
+ setupDone:()=>{const t=tick(2);['L','R'].forEach(k=>{const v=S.dev[k];if(!v.on)S.gaps.push({k,from:v.since,to:t});v.on=true;v.since=null;v.sync=t});S.sheet=null;S.setup=null;render();toast('Insoles paired and recording')},
+ openForm:()=>{openForm(null);render()},
+ formSym:d=>{const f=S.form;f.err='';if(d.v==='none'){f.items=f.items.includes('none')?[]:['none']}else{f.items=f.items.filter(x=>x!=='none');f.items=f.items.includes(d.v)?f.items.filter(x=>x!==d.v):f.items.concat(d.v)}render()},
+ formFoot:d=>{S.form.foot=d.v;S.form.err='';render()},
+ formArea:d=>{S.form.area=d.v;S.form.err='';render()},
+ formOnset:d=>{S.form.onset=d.v;render()},
+ formReview:()=>{const f=S.form;if(!f.items.length){f.err='Choose at least one option, or "No symptoms noticed".';render();return}
+  if(!f.items.includes('none')&&(!f.foot||!f.area)){f.err='Choose which foot and where on the foot.';render();return}
+  f.step='review';render()},
+ formEdit:()=>{S.form.step='edit';render()},
+ formSave:()=>{const f=S.form,none=f.items.includes('none');const rec=saveSymptom({items:f.items.slice(),foot:none?null:f.foot,area:none?null:f.area,onset:f.onset,note:f.note.trim(),source:'form'});
+  if(f.fromChat){if(S.chat.stage!=='idle')S.chat.stage='done';S.chat.msgs.push({from:'a',key:'a_saved',p:{items:f.items.slice(),time:fmt(rec.time)}})}
+  S.sheet=null;S.form=null;render();toast(`Symptoms recorded at ${fmt(rec.time)}`)},
+ prepare:()=>{S.reportAt=S.reportAt||tick();go('report');toast('Report prepared')},
+ share:()=>{openSheet({t:'share'});render()},
+ shareTo:d=>{S.shares.push({to:d.v,time:tick()});S.sheet={t:'share',done:d.v};S.reportAt=S.reportAt||S.clock;render()},
+ instr:()=>{const c=S.clin.instr;S.instr={text:c?c.text:'',by:c?c.by:'Dr. Anjali Rao',ok:false,err:''};openSheet({t:'instr'});render()},
+ instrOk:()=>{S.instr.ok=!S.instr.ok;S.instr.err='';render()},
+ instrSave:()=>{const d=S.instr;if(!d.text.trim()){d.err='Enter the instructions your clinician gave you.';render();return}if(!d.ok){d.err='Tick the confirmation to save.';render();return}
+  S.clin.instr={text:d.text.trim(),by:d.by.trim()||'Clinician',at:tick()};S.sheet=null;S.instr=null;render();toast('Clinician instructions saved')},
+ contacted:()=>{S.clin.contacted=tick();render();toast('Marked: clinician contacted')},
+ complete:()=>{if(!S.alert||S.follow)return;openSheet({t:'complete'});render()},
+ completeYes:()=>{S.follow=tick();S.sheet=null;render();toast('Follow-up marked completed')},
+ notify:()=>{if(!isAdv()){openSheet({t:'upgrade',f:'Caregiver sharing'});render();return}openSheet({t:'notify'});render()},
+ sendNotice:()=>{S.care.notice={sent:tick(),ack:null};render();toast('Update sent to Riya')},
+ ack:()=>{if(S.care.notice&&!S.care.notice.ack){S.care.notice.ack=tick(2);render();toast('Riya acknowledged the update')}},
+ consent:()=>{if(!isAdv()){openSheet({t:'upgrade',f:'Caregiver sharing'});render();return}openSheet({t:'consent'});render()},
+ consentYes:()=>{S.care.on=true;S.care.since=tick();S.sheet=null;render();toast('Sharing with Riya is on')},
+ revoke:()=>{openSheet({t:'revoke'});render()},
+ revokeYes:()=>{S.care.on=false;S.care.since=null;S.sheet=null;render();toast('Sharing with Riya stopped')},
+ upgrade:d=>{openSheet({t:'upgrade',f:d.f});render()},
+ chip:d=>{userIntent(d.v,null)},
+ chatSend:()=>{const t=S.chat.draft.trim();if(!t)return;S.chat.draft='';const it=classify(t);if(it==='restart'){startChat();render();return}S.chat.msgs.push({from:'u',raw:t});respond(it||'unknown');render();const el=$('#chat_in');if(el)el.focus()},
+ voice:()=>{if(S.listening)return;S.listening=true;render();
+  later(2300,()=>{S.listening=false;const st=S.chat.stage;
+   const map={ask:['warm','v_ask'],more:['none_visible','v_more'],confirm:['yes','v_confirm'],done:['report','v_done'],idle:['readings','v_idle']};
+   const [intent,key]=map[st]||map.idle;
+   S.chat.msgs.push({from:'u',vt:{en:T.en[key],hi:T.hi[key]}});respond(intent);render()})},
+ copyReport:()=>copyText(reportText()),
+ print:()=>{$('#printArea').innerHTML=reportHTML(true);window.print()},
+ download:()=>{const b=new Blob([reportText()],{type:'text/plain'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='StepSure-report-Meera-30-Oct-2026.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);toast('Report downloaded')}
+};
+const INP={chat:v=>{S.chat.draft=v},formNote:v=>{if(S.form)S.form.note=v},instrText:v=>{if(S.instr)S.instr.text=v},instrBy:v=>{if(S.instr)S.instr.by=v}};
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const f=A[b.dataset.action];if(f){e.preventDefault();f(b.dataset,b)}});
+document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.input;if(k&&INP[k])INP[k](e.target.value)});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&S.sheet){e.preventDefault();closeSheet();return}
+ if(e.key==='Enter'&&e.target.id==='chat_in'){e.preventDefault();A.chatSend()}
+});
+
+init();render();
+window.__stepsure={get state(){return S}};
+})();
+</script>
+</body>
+</html>

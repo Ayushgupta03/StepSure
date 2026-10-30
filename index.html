@@ -109,13 +109,17 @@ button.banner:hover{filter:brightness(.985)}
 .ins{display:flex;flex-direction:column;gap:7px;padding:11px 12px;border-radius:14px;background:var(--soft)}
 .ins-top{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--navy)}
 .ins-top svg{color:var(--teal);width:18px;height:18px}
-.batt{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
-.batt-bar{flex:1;height:7px;border-radius:9px;background:#DDE3EC;overflow:hidden}
-.batt-bar i{display:block;height:100%;background:var(--teal);border-radius:9px}
+.batt{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--navy)}
+.bat-ic{position:relative;width:26px;height:13px;border:1.8px solid currentColor;border-radius:3.5px;color:#5D6A80;flex:none;box-sizing:border-box}
+.bat-ic::after{content:"";position:absolute;right:-4.5px;top:2.5px;width:2.5px;height:4.5px;border-radius:0 1.5px 1.5px 0;background:currentColor}
+.bat-ic i{position:absolute;left:1.5px;top:1.5px;bottom:1.5px;max-width:calc(100% - 3px);border-radius:1.5px;background:var(--teal)}
+.bat-ic.low{color:var(--amber)}.bat-ic.low i{background:var(--amber-line)}
+.bat-low{font-size:11.5px;font-weight:700;color:var(--amber)}
+.kv dd .batt{font-size:inherit}
 .ins-st{font-size:12.5px;font-weight:600;color:var(--teal)}
 .ins.is-off{background:#F1F2F5;outline:1.5px dashed #C3CAD6;outline-offset:-1.5px}
 .ins.is-off .ins-top svg,.ins.is-off .ins-st{color:#6B7689}
-.ins.is-off .batt-bar i{background:var(--off)}
+.ins.is-off .bat-ic i{background:var(--off)}
 .meta-row{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
 .meta-row span{display:flex;align-items:center;gap:5px}
 .meta-row svg{width:15px;height:15px}
@@ -142,6 +146,24 @@ button.banner:hover{filter:brightness(.985)}
 .legend .ramp{height:9px;border-radius:9px}
 .legend .ticks{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 .legend .ltitle{font-size:12px;font-weight:600;color:var(--ink)}
+
+/* Foot map status + explainer */
+.map-status{display:flex;gap:9px;align-items:flex-start;border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:600}
+.map-status svg{width:18px;height:18px;margin-top:1px}
+.map-status.ok{background:var(--teal-soft);color:#0A5E5B}
+.map-status.att{background:var(--amber-bg);color:var(--amber)}
+.map-status.na{background:#EEF1F5;color:#4A5669}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--teal-soft);color:var(--teal)}
+.pill.watch{background:#FFF8E6;color:#7A5A00;box-shadow:inset 0 0 0 1px #F0D88A}
+.pill.att{background:var(--amber-bg);color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber-line)}
+.pill.na{background:#EEF1F5;color:#6B7689}
+.bands{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.bands li{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:center;font-size:13.5px}
+.zt td,.zt th{padding:7px 4px}
+.zt td:first-child{font-weight:600;color:var(--navy)}
+.zt td:not(:first-child),.zt th:not(:first-child){text-align:right}
+.zt tr.att td{background:var(--amber-bg)}
 
 /* Rows */
 .row-card{flex-direction:row!important;align-items:center;gap:12px!important}
@@ -316,6 +338,7 @@ td.hot{color:var(--amber);font-weight:700}
 .scrim{position:absolute;inset:0;background:rgba(11,21,37,.42);border:0;padding:0;cursor:default}
 .panel{position:relative;background:#fff;border-radius:24px 24px 0 0;max-height:90%;overflow-y:auto;padding:10px 18px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -10px 30px -10px rgba(15,31,61,.3)}
 .panel:focus{outline:none}
+.panel>*{flex-shrink:0}
 .layer.anim .scrim{animation:fade .25s}
 .layer.anim .panel{animation:up .3s cubic-bezier(.2,.8,.2,1)}
 @keyframes fade{from{opacity:0}}
@@ -626,8 +649,64 @@ function banners(){
  if(!S.alert&&!anyOff()) o+=`<div class="banner ok">${ic('checkc')}<span class="b-txt"><strong>No unusual changes in today's readings</strong><span>Keep up your daily foot check. Readings don't replace it.</span></span></div>`;
  return o;
 }
+function battery(d){const low=d.bat<20;return `<span class="batt" aria-label="Battery ${d.bat}%${low?', charge soon':''}"><span class="bat-ic${low?' low':''}" aria-hidden="true"><i style="width:${d.bat}%"></i></span><span class="num">${d.bat}%</span>${low?'<span class="bat-low">Charge soon</span>':''}</span>`}
+const ZONES=[['hal','Big toe'],['m1','Ball, big-toe side'],['m3','Ball, centre'],['m5','Ball, outer edge'],['mid','Midfoot'],['heel','Heel']];
+const PUSUAL={L:{hal:255,m1:405,m3:330,m5:212,mid:95,heel:376},R:{hal:244,m1:372,m3:315,m5:218,mid:90,heel:360}};
+const BAND={ok:'Usual',watch:'Keep an eye',att:'Needs attention',na:'No data'};
+function tBand(d){const a=Math.abs(d);return a>THR?'att':a>1?'watch':'ok'}
+function zoneRows(mode){
+ const both=!anyOff(),t=temps();
+ return ZONES.map(([z,n])=>{
+  if(mode==='temp'){
+   const L=S.dev.L.on?t.L[z]:null,R=S.dev.R.on?t.R[z]:null,d=both?+(L-R).toFixed(1):null;
+   return {z,n,L,R,d,band:both?tBand(d):'na'};
+  }
+  const L=S.dev.L.on?PRESS.L[z]:null,R=S.dev.R.on?PRESS.R[z]:null;
+  const ch=k=>S.dev[k].on?(PRESS[k][z]-PUSUAL[k][z])/PUSUAL[k][z]:null;
+  const worst=[ch('L'),ch('R')].filter(x=>x!=null).reduce((a,b)=>Math.max(a,b),-1);
+  return {z,n,L,R,band:worst===-1?'na':worst>.3?'att':worst>.15?'watch':'ok',vs:worst===-1?'No data':worst>.15?'Higher':'Similar'};
+ });
+}
+function mapStatus(mode){
+ if(anyOff()){const off=['L','R'].filter(k=>!S.dev[k].on).map(sideName).join(' and ');return `<div class="map-status na">${ic('unplug')}<span>${off} insole not connected. StepSure can't compare your feet until both are connected.</span></div>`}
+ const rows=zoneRows(mode),att=rows.filter(r=>r.band==='att');
+ if(mode==='temp'){
+  if(att.length){const r=att[0];return `<div class="map-status att">${ic('alert')}<span>${att.length} spot needs attention: ${r.d>0?'left':'right'} foot, ${r.n.toLowerCase()}, ${Math.abs(r.d).toFixed(1)} °C warmer than the other foot.</span></div>`}
+  return `<div class="map-status ok">${ic('checkc')}<span>All spots are within your usual left vs right range.</span></div>`;
+ }
+ return att.length?`<div class="map-status att">${ic('alert')}<span>Pressure is higher than usual at ${att.length} spot.</span></div>`:`<div class="map-status ok">${ic('checkc')}<span>Pressure is similar to your usual pattern on both feet.</span></div>`;
+}
+function sheetExplain(){
+ const m=S.mapMode,rows=zoneRows(m);
+ const v=x=>x==null?'–':m==='temp'?x.toFixed(1):x;
+ let body;
+ if(m==='temp'){
+  body=`<p>Foot skin usually sits between about 28 and 33 °C, and it shifts with your shoes, socks and the room. So one number on its own isn't a warning. StepSure compares the <b>same spot on your left and right foot</b>. A spot that stays much warmer than its match is worth checking.</p>
+  <section class="card soft"><h3 class="h3">Left vs right difference</h3><ul class="bands">
+   <li><span class="pill ok">Usual</span><span>1 °C or less</span></li>
+   <li><span class="pill watch">Keep an eye</span><span>1 to 2.2 °C</span></li>
+   <li><span class="pill att">Needs attention</span><span>More than 2.2 °C for 2 days in a row</span></li></ul></section>
+  <div class="tbl-wrap"><table class="zt"><thead><tr><th>Today, °C</th><th>Left</th><th>Right</th><th>Diff</th><th>Status</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr class="${r.band==='att'?'att':''}"><td>${r.n}</td><td>${v(r.L)}</td><td>${v(r.R)}</td><td>${r.d==null?'–':(r.d>0?'+':'')+r.d.toFixed(1)}</td><td><span class="pill ${r.band}">${r.band==='na'?"Can't compare":BAND[r.band]}</span></td></tr>`).join('')}
+  </tbody></table></div>
+  <p class="note">Your usual difference is about 0.5 °C, based on 28 days of wear (14 Sep to 11 Oct).</p>`;
+ } else {
+  body=`<p>Pressure shows how much load each area carries when you stand and walk, measured in kPa. The ball of the foot and the heel normally carry the most. StepSure compares each spot with <b>your own usual pattern</b>, because healthy values differ from person to person.</p>
+  <section class="card soft"><h3 class="h3">Compared with your usual</h3><ul class="bands">
+   <li><span class="pill ok">Usual</span><span>Within 15% of your usual</span></li>
+   <li><span class="pill watch">Keep an eye</span><span>15 to 30% higher</span></li>
+   <li><span class="pill att">Needs attention</span><span>More than 30% higher</span></li></ul></section>
+  <div class="tbl-wrap"><table class="zt"><thead><tr><th>Today, kPa</th><th>Left</th><th>Right</th><th>Status</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr class="${r.band==='att'?'att':''}"><td>${r.n}</td><td>${v(r.L)}</td><td>${v(r.R)}</td><td><span class="pill ${r.band}">${BAND[r.band]}</span></td></tr>`).join('')}
+  </tbody></table></div>
+  <p class="note">Areas that stay high are useful to show your care team when they check your footwear.</p>`;
+ }
+ const alertBtn=m==='temp'&&alertOpen()?`<button type="button" class="btn primary" data-action="go" data-to="alert">${ic('alert')}See alert and next steps</button>`:'';
+ return head('Understand your foot map','<span class="ess">Included in every plan</span>')+seg('mapMode',[['press','Pressure','gauge'],['temp','Temperature','therm']],m,true)+body+
+  `<div class="callout info">${ic('info')}<span>The map shows where readings differ. It can't tell what's causing a change or diagnose a foot problem. If you're worried about your feet, contact your care team.</span></div>${alertBtn}`;
+}
 function deviceCard(){
- const side=k=>{const d=S.dev[k];return `<span class="ins${d.on?'':' is-off'}"><span class="ins-top">${ic('foot')}${sideName(k)}</span><span class="batt"><span class="batt-bar"><i style="width:${d.bat}%"></i></span><span class="num">${d.bat}%</span></span><span class="ins-st">${d.on?'Connected':'Not connected'}</span></span>`};
+ const side=k=>{const d=S.dev[k];return `<span class="ins${d.on?'':' is-off'}"><span class="ins-top">${ic('foot')}${sideName(k)}</span>${battery(d)}<span class="ins-st">${d.on?'Connected':'Not connected'}</span></span>`};
  return `<button type="button" class="card" data-action="go" data-to="device" aria-label="Insoles: ${S.dev.L.on?'left connected':'left not connected'}, ${S.dev.R.on?'right connected':'right not connected'}. Open insole settings">
   <span class="card-head"><span class="h3">Insoles</span><span class="link-s">Manage${ic('chev')}</span></span>
   <span class="ins-row">${side('L')}${side('R')}</span>
@@ -647,7 +726,8 @@ function home(){
    <div class="card-head"><h2 class="h3">Today's foot map</h2>${seg('mapMode',[['press','Pressure','gauge'],['temp','Temperature','therm']],S.mapMode)}</div>
    ${footMap(S.mapMode)}
    ${legend(S.mapMode)}
-   <p class="note">${S.mapMode==='temp'?`Latest skin temperature under each of 6 sensors per foot, synced ${lastSync()}. Matching spots on both feet are compared.`:'Highest pressure recorded today under each sensor. Higher values mean more load on that area.'}</p>
+   ${mapStatus(S.mapMode)}
+   <button type="button" class="btn secondary sm" data-action="explain">${ic('info')}Understand your foot map</button>
   </section>
   <button type="button" class="card row-card" data-action="go" data-to="report">${ic('file')}<span class="rc-txt"><strong>Reports and follow-up</strong><span>${followSummary()}</span></span>${ic('chev')}</button>
   ${S.alert?'':`<div class="demo-row"><button type="button" class="demo-link" data-action="simulate">Simulate alert</button></div>`}
@@ -656,7 +736,7 @@ function home(){
 function device(){
  const card=k=>{const d=S.dev[k];return `<section class="card ins-card${d.on?'':' is-off'}">
   <div class="card-head"><h2 class="h3">${sideName(k)} insole</h2><span class="status ${d.on?'s-ok':'s-warn'}">${d.on?'Connected':'Not connected'}</span></div>
-  <dl class="kv"><div><dt>Battery</dt><dd>${d.bat}%</dd></div><div><dt>Last sync</dt><dd>${fmt(d.sync)}</dd></div><div><dt>Sensors</dt><dd>${d.on?'6 of 6 reporting':'No signal'}</dd></div><div><dt>Size</dt><dd>UK 6</dd></div></dl>
+  <dl class="kv"><div><dt>Battery</dt><dd>${battery(d)}</dd></div><div><dt>Last sync</dt><dd>${fmt(d.sync)}</dd></div><div><dt>Sensors</dt><dd>${d.on?'6 of 6 reporting':'No signal'}</dd></div><div><dt>Size</dt><dd>UK 6</dd></div></dl>
   <button type="button" class="btn ${d.on?'secondary':'primary'} sm" data-action="toggleDev" data-k="${k}">${d.on?ic('unplug')+'Disconnect':ic('bt')+'Reconnect'}</button></section>`};
  const n=(S.dev.L.on?6:0)+(S.dev.R.on?6:0);
  return `<div class="pad">${backBar('Home','home')}<h1 class="title">Insoles</h1>
@@ -797,8 +877,6 @@ function profile(){
    <p class="note">${isAdv()?'Advanced adds the assistant, voice check-ins, richer report summaries and caregiver sharing.':'Free includes monitoring, trends, alerts, next steps, symptom logging and basic reports.'}</p>
    <button type="button" class="btn ${isAdv()?'secondary':'primary'} sm" data-action="tier" data-tier="${isAdv()?'free':'adv'}">${isAdv()?'Switch to Free':'Switch to Advanced'}</button></section>
   ${care}
-  <section class="card"><h2 class="h3">Care team</h2><div class="who">${ic('clinic')}<div><strong style="color:var(--navy)">Dr. Anjali Rao</strong><p class="note">Diabetic foot clinic</p></div></div>
-   <p class="note">StepSure doesn't send readings to your clinic automatically. You choose what to share.</p></section>
   <button type="button" class="card row-card" data-action="go" data-to="report">${ic('file')}<span class="rc-txt"><strong>Reports and follow-up</strong><span>${followSummary()}</span></span>${ic('chev')}</button>
   <button type="button" class="card row-card" data-action="go" data-to="device">${ic('bt')}<span class="rc-txt"><strong>Insoles</strong><span>${anyOff()?'Monitoring incomplete':'Both connected'} · synced ${lastSync()}</span></span>${ic('chev')}</button>
  </div>`;
@@ -1079,7 +1157,7 @@ function sheetUpgrade(){
   <div class="callout info">${ic('info')}<span>Alerts, next steps, symptom recording and basic reports are included in every plan.</span></div>
   <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Not now</button><button type="button" class="btn primary" data-action="tier" data-tier="adv">Switch to Advanced</button></div>`;
 }
-const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade};
+const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade,explain:sheetExplain};
 
 /* ---------- render ---------- */
 const SCREENS={home,trends,assistant,profile,device,alert:alertScr,report};
@@ -1133,7 +1211,7 @@ function copyText(txt){
 
 /* ---------- actions ---------- */
 const A={
- go:d=>{go(d.to)},
+ go:d=>{S.sheet=null;go(d.to)},
  seg:d=>{if(d.k==='lang')S.chat.lang=d.v;else S[d.k]=d.v;render()},
  tier:d=>{
   if(S.tier===d.tier){if(S.sheet&&S.sheet.t==='upgrade')closeSheet();return}
@@ -1192,6 +1270,7 @@ const A={
  revoke:()=>{openSheet({t:'revoke'});render()},
  revokeYes:()=>{S.care.on=false;S.care.since=null;S.sheet=null;render();toast('Sharing with Riya stopped')},
  upgrade:d=>{openSheet({t:'upgrade',f:d.f});render()},
+ explain:()=>{openSheet({t:'explain'});render()},
  chip:d=>{userIntent(d.v,null)},
  chatSend:()=>{const t=S.chat.draft.trim();if(!t)return;S.chat.draft='';const it=classify(t);if(it==='restart'){startChat();render();return}S.chat.msgs.push({from:'u',raw:t});respond(it||'unknown');render();const el=$('#chat_in');if(el)el.focus()},
  voice:()=>{if(S.listening)return;S.listening=true;render();

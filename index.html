@@ -165,6 +165,147 @@ button.banner:hover{filter:brightness(.985)}
 .zt td:not(:first-child),.zt th:not(:first-child){text-align:right}
 .zt tr.att td{background:var(--amber-bg)}
 
+/* Health Coins */
+.coin{width:22px;height:22px;flex:none}
+.coin.big{width:34px;height:34px}.coin.huge{width:64px;height:64px}
+.coin-card{gap:8px!important}
+.cc-title{display:flex;align-items:center;gap:8px}
+.cc-bal{font-size:16px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.cc-row{display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:var(--muted)}
+.cc-row b{color:var(--navy);font-variant-numeric:tabular-nums}
+.rw-bar{display:block;height:6px;border-radius:9px;background:#E3E8EF;overflow:hidden}
+.rw-bar i{display:block;height:100%;border-radius:9px;background:var(--blue);transition:width .5s ease}
+.rw-bar.big{height:10px}
+.rw-bar.done i{background:var(--teal)}
+.rw-bar.paused i{background:#A9B3C2}
+.rw-bar.gold i{background:linear-gradient(90deg,#E9A92A,#F2C45A)}
+.scn-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#6B4FA0;background:#F1ECFA;padding:3px 8px;border-radius:999px}
+.scn-bar{display:flex;gap:9px;align-items:flex-start;border:1.5px dashed #BBA7E0;background:#F7F3FD;color:#4B3577;border-radius:14px;padding:10px 12px;font-size:13.5px}
+.scn-bar svg{width:18px;height:18px;margin-top:1px}
+.rw-sec{gap:10px!important}
+.rw-sec p{font-size:14px}
+.fig{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 6px;margin:0;font-variant-numeric:tabular-nums}
+.fig b{font-family:var(--f-display);font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--navy);line-height:1.15}
+.fig span{font-size:14px;color:var(--muted)}
+.hd-sub{font-size:14px;font-weight:600;color:var(--muted);font-family:var(--f-body);letter-spacing:0}
+.hd-gap{font-size:14px!important;color:var(--ink)}
+.hd-gap b{color:var(--navy)}
+.hd-done{display:flex;gap:12px;align-items:center;background:var(--teal-soft);border-radius:14px;padding:12px}
+.hd-big{font-size:15px!important;font-weight:700;color:var(--navy)}
+.hd-plus{font-size:14px!important;font-weight:700;color:#8A5A00}
+.hd-done.flash .hd-coin{animation:coinpop .9s cubic-bezier(.2,.9,.3,1.3)}
+.hd-done.flash .hd-plus{animation:plusup .9s ease-out}
+@keyframes coinpop{0%{transform:scale(.4) rotate(-30deg);opacity:0}60%{transform:scale(1.15) rotate(8deg);opacity:1}100%{transform:none}}
+@keyframes plusup{0%{transform:translateY(8px);opacity:0}100%{transform:none;opacity:1}}
+.info-btn{border:0;background:var(--soft);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--blue)}
+.info-btn svg{width:18px;height:18px}
+.rw-info{background:var(--blue-soft);color:#1E3F87;border-radius:12px;padding:10px 12px;font-size:13.5px!important}
+.rw-note{display:flex;gap:8px;align-items:flex-start;font-size:13.5px!important;color:var(--ink);background:var(--soft);border-radius:12px;padding:10px 12px}
+.rw-note svg{width:17px;height:17px;margin-top:1px;flex:none}
+.rw-note.good{background:var(--teal-soft);color:#0A5E5B}
+.link-btn{border:0;background:none;color:var(--blue);font-weight:600;font-size:14px;padding:4px 0;align-self:flex-start;text-decoration:underline;text-underline-offset:3px}
+.markers{position:relative;list-style:none;margin:0 -4px;padding:10px 4px 6px;display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%)}
+.markers:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.mk{flex:0 0 46px;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);text-align:center}
+.mk-dot{position:relative;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;border:2px solid #CBD3DF;background:#fff;color:#8C96A8}
+.mk-dot svg{width:15px;height:15px;stroke-width:2.6}
+.mk-dot em{position:absolute;top:-8px;right:-10px;font-style:normal;font-size:10px;font-weight:800;color:#8A5A00;background:#FCE7B4;border-radius:999px;padding:1px 4px}
+.mk.done .mk-dot{background:var(--teal);border-color:var(--teal);color:#fff}
+.mk.missed .mk-dot{background:#fff;border-color:#C9CFD9;border-style:dashed;color:#A8261D}
+.mk.paused .mk-dot{background:#EEF1F5;border-color:#A9B3C2;color:#4A5669}
+.mk.pending .mk-dot{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
+.mk.sync .mk-dot{border-color:var(--amber-line);color:var(--amber);background:var(--amber-bg)}
+.mk-day{font-weight:700;color:var(--navy);margin-top:3px}
+.mk.is-today .mk-day{color:var(--blue)}
+.mk-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:var(--muted)}
+.mk-key li{display:flex;align-items:center;gap:4px}
+.mk-key svg{width:13px;height:13px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sv-sub{font-size:14px!important;color:var(--ink)}
+.rw-sync{flex-wrap:wrap}
+.rw-sync .sync-btn{width:auto;margin-left:auto}
+.rw-exp{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+.exp-head{width:100%;border:0;background:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;font-weight:700;font-size:15px;color:var(--navy);text-align:left}
+.exp-head .exp-chev{transition:transform .2s;color:var(--faint)}
+.exp-head[aria-expanded="true"] .exp-chev{transform:rotate(90deg)}
+.exp-body{padding:0 16px 14px;display:flex;flex-direction:column;gap:10px}
+.demo-exp{border:1.5px dashed #BBA7E0;background:#FBF9FE}
+.demo-exp .exp-head{color:#4B3577}
+.demo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.demo-btn{width:100%;text-align:left;border:1px solid #DCD0F0;background:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.demo-btn b{color:#3D2A66;font-size:14px}
+.demo-btn span{font-size:12.5px;color:var(--muted)}
+.demo-btn:hover:not(:disabled){background:#F4EFFC}
+.demo-btn:disabled{opacity:.55}
+.list.rules{gap:8px}
+.list.rules li{font-size:13px;line-height:1.45}
+.list.rules li>svg{width:16px;height:16px}
+.bill{margin:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.bill div{display:flex;justify-content:space-between;gap:10px;padding:11px 14px;border-top:1px solid var(--line);font-size:15px}
+.bill div:first-child{border-top:0}
+.bill dt{color:var(--ink)}
+.bill dd{margin:0;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bill dd.cr,.bill dd.gain{color:#0A7A4E}
+.bill .tot{background:var(--soft)}
+.bill .tot dt{font-weight:700;color:var(--navy)}
+.bill .tot dd{font-size:17px}
+.cyc{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cyc-coin{animation:coinpop 1s cubic-bezier(.2,.9,.3,1.3)}
+.celebrate{position:absolute;inset:0 0 auto;height:160px;pointer-events:none;overflow:hidden}
+.celebrate i{position:absolute;top:-10px;width:7px;height:11px;border-radius:2px;opacity:0;animation:fall 1.6s ease-in forwards}
+.celebrate i:nth-child(3n){background:#F2B640}.celebrate i:nth-child(3n+1){background:var(--teal)}.celebrate i:nth-child(3n+2){background:#7FA3E6}
+.celebrate i:nth-child(1){left:6%;animation-delay:0.00s}.celebrate i:nth-child(2){left:14%;animation-delay:0.12s}.celebrate i:nth-child(3){left:22%;animation-delay:0.24s}.celebrate i:nth-child(4){left:30%;animation-delay:0.36s}.celebrate i:nth-child(5){left:38%;animation-delay:0.00s}.celebrate i:nth-child(6){left:46%;animation-delay:0.12s}.celebrate i:nth-child(7){left:54%;animation-delay:0.24s}.celebrate i:nth-child(8){left:62%;animation-delay:0.36s}.celebrate i:nth-child(9){left:70%;animation-delay:0.00s}.celebrate i:nth-child(10){left:78%;animation-delay:0.12s}.celebrate i:nth-child(11){left:86%;animation-delay:0.24s}.celebrate i:nth-child(12){left:94%;animation-delay:0.36s}
+@keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(150px) rotate(220deg)}}
+
+/* Coin history calendar */
+.cal{display:flex;flex-direction:column;gap:12px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cal-arrow{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--navy);flex:none}
+.cal-arrow svg{width:18px;height:18px}
+.cal-arrow:hover:not(:disabled){background:var(--soft)}
+.cal-arrow:disabled{opacity:.35}
+.cal-sel select{appearance:none;-webkit-appearance:none;border:0;border-radius:10px;padding:7px 26px 7px 10px;font-family:var(--f-display);font-weight:600;font-size:15px;color:var(--navy);background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235D6A80' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center/14px;cursor:pointer;text-align:center}
+.cal-sel select:hover{background-color:var(--soft)}
+.cal-sel select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.cal-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:0;border-radius:12px;background:var(--soft)}
+.cal-stats div{padding:8px 10px;display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:1px;min-width:0}
+.cal-stats dt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-stats div+div{border-left:1px solid #E1E6EE}
+.cal-stats dt{font-size:11.5px;color:var(--muted)}
+.cal-stats dd{margin:0;font-size:15px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.cal-stats div:first-child dd{color:#8A5A00}
+.cal-wd,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));column-gap:2px}
+.cal-wd span{text-align:center;font-size:11px;font-weight:600;color:var(--faint)}
+.cal-grid{row-gap:4px}
+.cc{height:36px;min-width:0;border:0;background:none;padding:0;display:grid;place-items:center}
+.cc .cd{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;transition:box-shadow .15s}
+.cc.none .cd{color:#C4CBD5;font-weight:500}
+.cc.done .cd{background:#FCEBC0;color:#5E3E00}
+.cc.bonus .cd{background:#E9A92A;color:#fff;font-weight:700}
+.cc.missed .cd{border:1.5px dashed #D9A6A1;color:#A8261D}
+.cc.paused .cd{background:repeating-linear-gradient(135deg,#E6EAF0 0 3px,#F5F7FA 3px 6px);color:#4A5669}
+.cc.sync .cd{border:1.5px solid var(--amber-line);color:var(--amber)}
+.cc.pending .cd{color:var(--blue);font-weight:700}
+.cc.today .cd{box-shadow:inset 0 0 0 2px var(--blue)}
+.cc[aria-pressed="true"] .cd{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--navy)}
+.cc.today[aria-pressed="true"] .cd{box-shadow:inset 0 0 0 2px var(--blue),0 0 0 2px #fff,0 0 0 4px var(--navy)}
+button.cc:hover .cd{filter:brightness(.96)}
+.cal-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted)}
+.cal-key li{display:flex;align-items:center;gap:5px}
+.cal-key .k{width:11px;height:11px;border-radius:50%;display:inline-block}
+.cal-key .k.done{background:#FCEBC0}.cal-key .k.bonus{background:#E9A92A}
+.cal-key .k.missed{border:1.5px dashed #D9A6A1}
+.cal-key .k.paused{background:repeating-linear-gradient(135deg,#D5DBE4 0 2px,#F5F7FA 2px 4px)}
+.cal-key .k.today{box-shadow:inset 0 0 0 2px var(--blue)}
+.cal-detail{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:3px}
+.cd-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.cd-head b{color:var(--navy);font-size:14.5px}
+.cd-chip{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:13px;color:#8A5A00;background:#FFF5DC;border-radius:999px;padding:2px 9px 2px 4px;font-variant-numeric:tabular-nums}
+.cd-chip .coin{width:16px;height:16px}
+.cd-chip.z{color:var(--muted);background:var(--soft);padding:2px 9px}
+.cd-main{margin:0;font-size:13.5px;color:var(--ink)}
+.cd-note{margin:0;font-size:12.5px;color:var(--muted)}
+
 /* Rows */
 .row-card{flex-direction:row!important;align-items:center;gap:12px!important}
 .row-card>svg:first-child{width:24px;height:24px;color:var(--teal)}
@@ -188,6 +329,8 @@ button.banner:hover{filter:brightness(.985)}
 .btn.sm{min-height:40px;padding:8px 12px;font-size:14px;border-radius:12px}
 .btn:disabled{opacity:.45}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.sheet-actions .btn{width:auto;white-space:nowrap;padding:8px 16px}
 .adv{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 7px 3px 5px;border-radius:999px;white-space:nowrap}
 .adv svg{width:12px;height:12px}
 .ess{display:inline-flex;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--teal);background:var(--teal-soft);padding:3px 8px;border-radius:999px}
@@ -481,7 +624,8 @@ const P={
  foot:'<path d="M10 3c3.2 0 5 3 5 7s-1 5-1 7.5S12.4 22 10.4 22 7 20 7 17s1-4.5 0-7S6.8 3 10 3z"/>',
  refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
- flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>'
+ flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',
+ pause:'<path d="M9 6v12M15 6v12"/>'
 };
 const ic=(n,c)=>`<svg class="i${c?' '+c:''}" viewBox="0 0 24 24" aria-hidden="true">${P[n]||''}</svg>`;
 const adv=()=>`<span class="adv">${ic('spark')}Advanced</span>`;
@@ -493,7 +637,6 @@ const TDIFF=[0.4,0.6,0.3,0.5,0.7,0.5,0.4,0.6,0.5,0.8,0.6,0.5,0.7,0.4];
 const R_M1=[29.7,29.9,29.6,29.8,30.0,29.5,29.7,29.9,29.8,30.1,29.9,29.8,29.9,30.0];
 const PRESS_L=[402,415,398,420,411,388,405,418,409,422,414,407,416,410];
 const PRESS_R=[371,380,366,384,377,360,372,379,370,386,378,373,380,375];
-const WEAR=[9.1,8.4,8.8,7.9,9.3,3.1,8.6,9.0,8.2,8.7,9.4,8.1,8.9,7.2];
 const TEMP={L:{hal:29.8,m1:30.4,m3:30.1,m5:29.6,mid:30.9,heel:30.2},R:{hal:29.6,m1:30.0,m3:29.9,m5:29.5,mid:30.7,heel:30.0}};
 const PRESS={L:{hal:262,m1:410,m3:334,m5:208,mid:92,heel:381},R:{hal:248,m1:375,m3:318,m5:221,mid:88,heel:364}};
 const THR=2.2;
@@ -515,7 +658,7 @@ function init(){
   care:{on:false,since:null,notice:null},
   clin:{contacted:null,instr:null},follow:null,
   chat:{lang:'en',stage:null,msgs:[],draft:'',pend:[]},listening:false,
-  sheet:null,form:null,setup:null,instr:null};
+  sheet:null,form:null,setup:null,instr:null,rw:rwInit('base')};
 }
 const tick=(n=1)=>{S.clock+=n;return S.clock};
 const isAdv=()=>S.tier==='adv';
@@ -523,6 +666,106 @@ const anyOff=()=>!S.dev.L.on||!S.dev.R.on;
 const alertOpen=()=>!!S.alert&&!S.follow;
 const lastSym=()=>S.symptoms[S.symptoms.length-1]||null;
 const sideName=k=>k==='L'?'Left':'Right';
+
+/* ---------- Health Coins: day history and rules engine ---------- */
+const RW={GOAL:270,DAY:3,BONUS:15,PLAN:4999,STREAK:7};
+const DAYMS=864e5,TODAY_T=Date.UTC(2026,9,30);
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const fmtDur=m=>{m=Math.max(0,Math.round(m));return `${Math.floor(m/60)}h ${m%60}m`};
+const fmtDurHi=m=>{m=Math.max(0,Math.round(m));return `${Math.floor(m/60)} घंटे ${m%60} मिनट`};
+const dLabel=(t,o)=>new Date(t).toLocaleDateString('en-GB',Object.assign({timeZone:'UTC'},o||{weekday:'short',day:'numeric',month:'short'}));
+/* Wear on the last 13 days, so Trends, reports and rewards all read one source */
+const W_DONE={17:546,18:504,19:528,20:474,21:558,22:498,23:516,24:540,25:492,26:522,27:564,28:486,29:534};
+const W_MISS={18:180,20:165,23:174,24:156,29:105};
+/* Each scenario is a run of days ending yesterday (29 Oct): d = goal met, m = goal missed, p = paused, s = waiting for sync */
+const BASE_HEAD=[['d',3],['p',1,'device'],['d',4],['d',14],['m',1],['d',4],['m',1],['d',14],['m',1],['d',5],['m',1],['d',14],['m',1],['d',6],['m',1],['d',14],['m',1],['d',3]];
+const SCEN={
+ base:{name:null,seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',5]])},
+ milestone:{name:'Seventh-day milestone',seg:BASE_HEAD.concat([['m',1],['d',4],['m',1],['d',6]])},
+ missed:{name:'Missed day',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['m',1]])},
+ paused:{name:'Paused day',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['p',1,'device']])},
+ sync:{name:'Delayed sync',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['s',1]])}
+};
+function buildDays(key){
+ const seg=SCEN[key].seg,flat=[];
+ seg.forEach(s=>{for(let k=0;k<s[1];k++)flat.push({type:s[0],reason:s[2]||null})});
+ const n=flat.length,days=flat.map((f,i)=>{
+  const t=TODAY_T-(n-i)*DAYMS,dom=new Date(t).getUTCDate(),win=t>=TODAY_T-13*DAYMS,h=(i*7919)%97;
+  const d={t,wear:0,pend:0,pause:null,late:null};
+  if(f.type==='d') d.wear=win&&W_DONE[dom]?W_DONE[dom]:300+(h*3)%250;
+  else if(f.type==='m') d.wear=win&&W_MISS[dom]?W_MISS[dom]:110+h;
+  else if(f.type==='p') d.pause=f.reason;
+  else if(f.type==='s'){d.wear=225;d.pend=55;d.pendSide='R'}
+  return d;
+ });
+ days.push({t:TODAY_T,wear:200,pend:0,pause:null,late:null,today:true});
+ return days;
+}
+const winDays=()=>S.rw.days.slice(-14);
+const winWear=()=>winDays().map(d=>+(d.wear/60).toFixed(2));
+const winPartial=()=>winDays().map((d,i)=>i<13&&['missed','paused','sync'].includes(dayStatus(d))?i:-1).filter(i=>i>=0);
+const winGoalDays=()=>winDays().slice(0,13).filter(d=>dayStatus(d)==='done').length;
+const avgWear=()=>{const w=winDays().slice(0,13);return fmtDur(w.reduce((a,d)=>a+d.wear,0)/w.length)};
+function winGaps(){return winDays().slice(0,13).flatMap(d=>{const st=dayStatus(d),t=dLabel(d.t);
+ if(st==='missed')return [{t,d:`Low wear, ${fmtDur(d.wear)} recorded. Readings for that day are partial.`}];
+ if(st==='paused')return [{t,d:`Monitoring paused (${d.pause==='clinician'?'clinician-directed break':'insole fault'}). No readings for that day.`}];
+ if(st==='sync')return [{t,d:`${fmtDur(d.pend)} of readings stored on an insole, waiting to sync.`}];
+ return []})}
+function rwInit(key){
+ const days=buildDays(key||'base');
+ return {scenario:key&&key!=='base'?key:null,days,redeemed:null,flash:null,info:false,open:{hist:false,rules:false,demo:false},calMonth:null,calDay:null,seenCycles:null};
+}
+const rwToday=()=>S.rw.days[S.rw.days.length-1];
+const todayWear=()=>rwToday().wear;
+function dayStatus(d){
+ if(d.pause) return 'paused';
+ if(d.wear>=RW.GOAL) return 'done';
+ if(d.pend>0&&d.wear+d.pend>=RW.GOAL) return 'sync';
+ return d.today?'pending':'missed';
+}
+/* Replays every day in order. Coins, streaks, bonuses, the cap and redemption all come from here, so nothing is awarded twice. */
+function rwReplay(){
+ const R=S.rw,o={tx:[],st:[],bal:0,streak:0,cycles:0,lastCycle:-1,done:0,lastMiss:-1,lastPause:-1,lastBreakLen:0};
+ let bal=0,streak=0;
+ R.days.forEach((d,i)=>{
+  const st=dayStatus(d);o.st.push(st);
+  if(st==='done'){
+   o.done++;
+   const used=!!R.redeemed&&o.done>R.redeemed.done;
+   const amt=used?0:RW.DAY;bal+=amt;
+   o.tx.push({i,type:'day',amt,note:used?'used':'',late:d.late});
+   streak++;
+   if(streak===RW.STREAK){
+    const b=used?0:RW.BONUS;bal+=b;
+    o.tx.push({i,type:'bonus',amt:b,note:used?'used':''});
+    o.cycles++;o.lastCycle=i;streak=0;
+   }
+  } else if(st==='missed'){if(streak>0)o.lastBreakLen=streak;streak=0;o.lastMiss=i}
+  else if(st==='paused') o.lastPause=i;
+ });
+ if(R.redeemed) o.tx.push({i:R.days.length-1,type:'redeem',amt:-R.redeemed.amount,at:R.redeemed.at});
+ o.bal=bal;o.avail=R.redeemed?0:bal;o.streak=streak;
+ o.todaySt=o.st[o.st.length-1];
+ o.cycleToday=o.lastCycle===R.days.length-1;
+ return o;
+}
+/* Called after anything that can earn coins: shows the day animation or the 7-day celebration */
+function rwAfter(prev){
+ const now=rwReplay();
+ later(1600,()=>{S.rw.flash=null});
+ if(now.cycles>prev.cycles){
+  const dayTx=now.tx.filter(x=>x.type==='day').pop(),bon=now.tx.filter(x=>x.type==='bonus').pop();
+  S.rw.flash='day';openSheet({t:'cycle',day:dayTx?dayTx.amt:0,bonus:bon?bon.amt:0});
+ } else if(now.done>prev.done) S.rw.flash='day';
+ return now;
+}
+function rwSync(){
+ const R=S.rw,prev=rwReplay();let mins=0,dates=[];
+ R.days.forEach(d=>{if(d.pend>0){d.wear+=d.pend;mins+=d.pend;d.pend=0;d.pendSide=null;d.late=S.clock;dates.push(d.t)}});
+ if(!mins) return null;
+ rwAfter(prev);
+ return {mins,dates};
+}
 
 /* ---------- small components ---------- */
 function seg(key,opts,val,full){
@@ -617,7 +860,7 @@ function chart(o){
  if(o.incomplete) g+=`<rect x="${X(13)-9}" y="${T}" width="18" height="${ih}" class="c-gap"/>`;
  if(o.target!=null) g+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.target)}" y2="${Y(o.target)}" class="c-target"/><text x="${W-R}" y="${Y(o.target)-5}" class="c-glab" text-anchor="end">${o.targetLabel}</text>`;
  if(o.thr!=null) g+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.thr)}" y2="${Y(o.thr)}" class="c-thr"/><text x="${L+4}" y="${Y(o.thr)-5}" class="c-tlab">${o.thrLabel}</text>`;
- if(o.bars) o.bars.forEach((v,i)=>{const c=i===5?'c-bar partial':i===13?'c-bar today':'c-bar';g+=`<rect x="${(X(i)-6).toFixed(1)}" y="${Y(v).toFixed(1)}" width="12" height="${(Y(o.min)-Y(v)).toFixed(1)}" rx="3" class="${c}"/>`});
+ if(o.bars) o.bars.forEach((v,i)=>{const c=(o.partial||[]).includes(i)?'c-bar partial':i===13?'c-bar today':'c-bar';g+=`<rect x="${(X(i)-6).toFixed(1)}" y="${Y(v).toFixed(1)}" width="12" height="${(Y(o.min)-Y(v)).toFixed(1)}" rx="3" class="${c}"/>`});
  (o.series||[]).forEach(s=>{
   const last=s.cut?12:13;
   const pts=s.v.map((v,i)=>[X(i),Y(v)]);
@@ -626,7 +869,7 @@ function chart(o){
   g+=`<path d="${d}" class="c-line" stroke="${s.color}"/>`;
   pts.forEach((p,i)=>{
    if(i>last) return;
-   const hot=o.thr!=null&&s.v[i]>=o.thr, partial=i===5;
+   const hot=o.thr!=null&&s.v[i]>=o.thr, partial=(o.partial||[]).includes(i);
    const r=hot||i===last?4.2:2.8;
    g+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}" fill="${partial?'#fff':hot?'#E7A23A':s.color}" stroke="${partial?s.color:'#fff'}" stroke-width="${partial?1.8:1.3}"/>`;
   });
@@ -635,7 +878,7 @@ function chart(o){
 }
 function tempChart(h){
  const v=tdiff();
- return chart({h,min:0,max:3.5,ticks:[0,1,2,3],thr:THR,thrLabel:'Alert level 2.2 °C',incomplete:anyOff(),
+ return chart({h,min:0,max:3.5,ticks:[0,1,2,3],partial:winPartial(),thr:THR,thrLabel:'Alert level 2.2 °C',incomplete:anyOff(),
   series:[{v,color:'#0D7A76',area:true,cut:anyOff()}],
   label:`Daily left minus right temperature difference at the 1st metatarsal, 17 to 30 October: ${v.map((x,i)=>DAYS[i]+' Oct '+x+' °C').join(', ')}`});
 }
@@ -710,7 +953,7 @@ function deviceCard(){
  return `<button type="button" class="card" data-action="go" data-to="device" aria-label="Insoles: ${S.dev.L.on?'left connected':'left not connected'}, ${S.dev.R.on?'right connected':'right not connected'}. Open insole settings">
   <span class="card-head"><span class="h3">Insoles</span><span class="link-s">Manage${ic('chev')}</span></span>
   <span class="ins-row">${side('L')}${side('R')}</span>
-  <span class="meta-row"><span>${ic('refresh')}Synced ${lastSync()}</span><span>${ic('clock')}Worn 7.2 h today</span><span class="${anyOff()?'q-bad':'q-ok'}">${anyOff()?'Data incomplete':'Data quality good'}</span></span></button>`;
+  <span class="meta-row"><span>${ic('refresh')}Synced ${lastSync()}</span><span>${ic('clock')}Worn ${fmtDur(todayWear())} today</span><span class="${anyOff()?'q-bad':'q-ok'}">${anyOff()?'Data incomplete':'Data quality good'}</span></span></button>`;
 }
 function followSummary(){
  if(S.follow) return `Follow-up completed at ${fmt(S.follow)}`;
@@ -729,6 +972,7 @@ function home(){
    ${mapStatus(S.mapMode)}
    <button type="button" class="btn secondary sm" data-action="explain">${ic('info')}Understand your foot map</button>
   </section>
+  ${coinCard()}
   <button type="button" class="card row-card" data-action="go" data-to="report">${ic('file')}<span class="rc-txt"><strong>Reports and follow-up</strong><span>${followSummary()}</span></span>${ic('chev')}</button>
   ${S.alert?'':`<div class="demo-row"><button type="button" class="demo-link" data-action="simulate">Simulate alert</button></div>`}
  </div>`;
@@ -743,7 +987,7 @@ function device(){
   ${anyOff()?`<div class="banner off">${ic('unplug')}<span class="b-txt"><strong>Monitoring incomplete</strong><span>${offText()} StepSure can't compare your feet until both insoles are connected.</span></span></div>`:''}
   ${card('L')}${card('R')}
   <section class="card"><h2 class="h3">Data quality</h2>
-   <dl class="kv"><div><dt>Wear today</dt><dd>7.2 h so far</dd></div><div><dt>Sensors reporting</dt><dd>${n} of 12</dd></div><div><dt>Personal baseline</dt><dd>Established</dd></div><div><dt>Baseline period</dt><dd>14 Sep to 11 Oct</dd></div></dl>
+   <dl class="kv"><div><dt>Wear today</dt><dd>${fmtDur(todayWear())} so far</dd></div><div><dt>Sensors reporting</dt><dd>${n} of 12</dd></div><div><dt>Personal baseline</dt><dd>Established</dd></div><div><dt>Baseline period</dt><dd>14 Sep to 11 Oct</dd></div></dl>
    <p class="note">Your baseline comes from 28 days of regular wear. Alerts compare matching spots on your left and right feet, alongside this baseline.</p></section>
   <button type="button" class="btn secondary" data-action="openSetup">${ic('bt')}Set up insoles again</button>
  </div>`;
@@ -760,15 +1004,15 @@ function trends(){
    <p class="note">${S.alert?'The difference has stayed above the alert level for 2 days in a row. Readings show a change but can\'t explain its cause.':'Your left and right feet have stayed within 1 °C of each other at this spot for the last 14 days.'}</p></section>`;
  } else if(m==='press'){
   body=`<section class="card"><div><h2 class="h3">Peak pressure</h2><p class="sub">Highest daily pressure at the 1st metatarsal, kPa</p></div>
-   ${chart({min:300,max:450,ticks:[300,350,400,450],incomplete:off,series:[{v:PRESS_L,color:'#2459C2',cut:!S.dev.L.on},{v:PRESS_R,color:'#0D7A76',cut:!S.dev.R.on}],label:'Peak pressure 17 to 30 October, left around 400 to 420 kPa, right around 370 to 385 kPa'})}
+   ${chart({min:300,max:450,ticks:[300,350,400,450],partial:winPartial(),incomplete:off,series:[{v:PRESS_L,color:'#2459C2',cut:!S.dev.L.on},{v:PRESS_R,color:'#0D7A76',cut:!S.dev.R.on}],label:'Peak pressure 17 to 30 October, left around 400 to 420 kPa, right around 370 to 385 kPa'})}
    <div class="c-key"><span><i style="background:#2459C2"></i>Left</span><span><i style="background:#0D7A76"></i>Right</span><span><i class="hollow"></i>Partial day</span></div>
    <div class="stat-row"><div class="stat"><b>${S.dev.L.on?'410':'–'}</b><span>Left today, kPa</span></div><div class="stat"><b>${S.dev.R.on?'375':'–'}</b><span>Right today, kPa</span></div><div class="stat"><b>Steady</b><span>14-day pattern</span></div></div>
    <p class="note">Pressure has stayed in a similar range on both feet. Your care team can use this when reviewing footwear.</p></section>`;
  } else {
   body=`<section class="card"><div><h2 class="h3">Wear time</h2><p class="sub">Hours of insole wear per day</p></div>
-   ${chart({min:0,max:10,ticks:[0,2,4,6,8,10],target:8,targetLabel:'Aim: 8 h',bars:WEAR,label:'Daily wear hours 17 to 30 October, mostly 8 to 9 hours, 3.1 hours on 22 October, 7.2 hours so far today'})}
-   <div class="c-key"><span><i class="dot" style="background:#0D7A76"></i>Full day</span><span><i class="dot" style="background:#C4CBD6"></i>Low wear</span><span><i class="dot" style="background:#8BC7C2"></i>Today so far</span></div>
-   <div class="stat-row"><div class="stat"><b>8.6 h</b><span>Daily average</span></div><div class="stat"><b>12 of 13</b><span>Full days</span></div><div class="stat"><b>7.2 h</b><span>Today so far</span></div></div></section>`;
+   ${chart({min:0,max:10,ticks:[0,2,4,6,8,10],target:RW.GOAL/60,targetLabel:'Goal: '+fmtDur(RW.GOAL),bars:winWear(),partial:winPartial(),label:`Daily valid wear in hours, 17 to 30 October. Goal ${fmtDur(RW.GOAL)}. Today ${fmtDur(todayWear())} so far.`})}
+   <div class="c-key"><span><i class="dot" style="background:#0D7A76"></i>Goal met</span><span><i class="dot" style="background:#C4CBD6"></i>Below goal or paused</span><span><i class="dot" style="background:#8BC7C2"></i>Today so far</span></div>
+   <div class="stat-row"><div class="stat"><b>${avgWear()}</b><span>Daily average</span></div><div class="stat"><b>${winGoalDays()} of 13</b><span>Goal met</span></div><div class="stat"><b>${fmtDur(todayWear())}</b><span>Today so far</span></div></div></section>`;
  }
  return `<div class="pad"><header><h1 class="title">Trends</h1><p class="sub">17 to 30 October 2026</p></header>
   ${seg('trend',[['temp','Temperature'],['press','Pressure'],['wear','Wear']],m,true)}
@@ -777,10 +1021,10 @@ function trends(){
  </div>`;
 }
 function gapList(){
- const g=[{t:'Thu 22 Oct',d:'Low wear, 3.1 h recorded. Readings for that day are partial.'}];
- S.gaps.forEach(x=>g.push({t:'Today',d:`${sideName(x.k)} insole disconnected ${fmt(x.from)} to ${fmt(x.to)}. No readings from that foot in this window.`}));
+ const g=winGaps();
+ S.gaps.forEach(x=>g.push({t:'Today',d:`${sideName(x.k)} insole disconnected ${fmt(x.from)} to ${fmt(x.to)}. Readings stored on the insole synced when it reconnected.`}));
  ['L','R'].forEach(k=>{const d=S.dev[k];if(!d.on)g.push({t:'Today',d:`${sideName(k)} insole not connected since ${fmt(d.since)}. Readings from that foot are missing.`,live:true})});
- g.push({t:'Today',d:'Day in progress, 7.2 h worn so far.'});
+ g.push({t:'Today',d:`Day in progress, ${fmtDur(todayWear())} of valid wear so far.`});
  return g;
 }
 function tracker(){
@@ -833,7 +1077,7 @@ function reportHTML(forPrint){
   <div class="rep-sec"><h3>Alert</h3><p>${S.alert?`Persistent temperature difference, left forefoot (1st metatarsal). Detected 30 Oct at ${fmt(S.alert.at)}; present on 29 and 30 Oct.`:'No alerts in this period.'}</p></div>
   <div class="rep-sec"><h3>Temperature at 1st metatarsal, °C</h3><div class="tbl-wrap"><table><thead><tr><th>Day</th><th>Left</th><th>Right</th><th>Difference</th></tr></thead><tbody>${rows}</tbody></table></div>
    ${rich&&!forPrint?`<div style="margin-top:8px">${tempChart(150)}</div>`:''}
-   <p class="note" style="margin-top:6px">Personal baseline established 14 Sep to 11 Oct. Typical difference about 0.5 °C. Peak pressure today: left ${S.dev.L.on?'410':'no data'}, right ${S.dev.R.on?'375':'no data'} kPa. Average wear 8.6 h a day.</p></div>
+   <p class="note" style="margin-top:6px">Personal baseline established 14 Sep to 11 Oct. Typical difference about 0.5 °C. Peak pressure today: left ${S.dev.L.on?'410':'no data'}, right ${S.dev.R.on?'375':'no data'} kPa. Average wear ${avgWear()} a day over the last 13 days.</p></div>
   <div class="rep-sec"><h3>Data gaps</h3><ul>${gapList().map(g=>`<li>${g.t}: ${g.d}</li>`).join('')}</ul></div>
   <div class="rep-sec"><h3>Confirmed symptoms</h3>${symHTML}</div>
   <div class="rep-sec"><h3>Clinician</h3><p>${S.clin.contacted?`Contacted (marked by Meera at ${fmt(S.clin.contacted)}).`:'Not marked as contacted.'}</p>${S.clin.instr?`<p style="margin-top:6px"><b>Instructions recorded by Meera</b> at ${fmt(S.clin.instr.at)}, from ${esc(S.clin.instr.by)}: “${esc(S.clin.instr.text)}”</p>`:'<p style="margin-top:6px">No clinician instructions recorded.</p>'}</div>
@@ -882,6 +1126,189 @@ function profile(){
  </div>`;
 }
 
+
+/* ---------- Health Coins: Home card and Health Rewards page ---------- */
+const coinIc=(cls)=>`<svg class="coin${cls?' '+cls:''}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#F2B640"/><circle cx="12" cy="12" r="7.2" fill="#F7CD6B" stroke="#D8961F" stroke-width="1.2"/><path d="M9.2 8.6h5.6M9.2 11h5.6M11 8.6c2.6 0 2.6 4.8 0 4.8H9.4l4.2 4" fill="none" stroke="#8A5A00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function rwBar(v,max,cls){const p=Math.max(0,Math.min(100,v/max*100));return `<span class="rw-bar${cls?' '+cls:''}" role="presentation"><i style="width:${p.toFixed(1)}%"></i></span>`}
+function scenarioTag(){return S.rw.scenario?`<span class="scn-tag">Scenario: ${SCEN[S.rw.scenario].name}</span>`:''}
+function coinLine(r){
+ if(S.rw.redeemed) return `Reward used for this renewal`;
+ return `${r.bal} coins`;
+}
+function coinCard(){
+ const r=rwReplay(),t=rwToday(),st=r.todaySt;
+ const todayTxt=st==='done'?`<b>Healthy Day completed</b>`:st==='paused'?`<b>Paused today</b>`:st==='sync'?`<b>${fmtDur(t.wear+t.pend)} / ${fmtDur(RW.GOAL)}</b> · waiting to sync`:`<b>${fmtDur(t.wear)} / ${fmtDur(RW.GOAL)}</b>`;
+ return `<button type="button" class="card coin-card" data-action="go" data-to="rewards" aria-label="Health Coins. ${esc(coinLine(r))}. Today ${fmtDur(t.wear)} of ${fmtDur(RW.GOAL)}. Health Streak ${r.streak} of 7 days. View rewards">
+  <span class="card-head"><span class="cc-title">${coinIc()}<span class="h3">Health Coins</span></span><span class="link-s">View rewards${ic('chev')}</span></span>
+  ${scenarioTag()}
+  <span class="cc-bal">${coinLine(r)}</span>
+  <span class="cc-row"><span>Today: ${todayTxt}</span>${rwBar(st==='done'?RW.GOAL:t.wear+(st==='sync'?t.pend:0),RW.GOAL,st==='done'?'done':st==='paused'?'paused':'')}</span>
+  <span class="cc-row"><span>Health Streak: <b>${r.streak} / 7 days</b></span></span>
+ </button>`;
+}
+const MARK={done:['check','Completed'],missed:['x','Missed'],paused:['pause','Paused'],pending:['clock','Today, in progress'],sync:['refresh','Waiting for sync']};
+function streakMarkers(r){
+ const n=S.rw.days.length,start=n-7;let h='';
+ for(let i=start;i<n;i++){
+  const d=S.rw.days[i],st=r.st[i],today=i===n-1,m=MARK[st]||MARK.pending,bonus=r.lastCycle===i;
+  h+=`<li class="mk ${st}${today?' is-today':''}"><span class="mk-dot" aria-hidden="true">${ic(m[0])}${bonus?'<em>+15</em>':''}</span><span class="mk-day">${today?'Today':dLabel(d.t,{weekday:'short'})}</span><span class="mk-date">${dLabel(d.t,{day:'numeric'})}</span><span class="sr">${dLabel(d.t)}: ${m[1]}${bonus?', streak bonus':''}</span></li>`;
+ }
+ return `<ol class="markers" aria-label="Last 7 days, scroll sideways for earlier days" tabindex="0">${h}</ol>
+  <ul class="mk-key" aria-hidden="true"><li>${ic('check')}Completed</li><li>${ic('clock')}Today</li><li>${ic('x')}Missed</li><li>${ic('pause')}Paused</li>${r.st.slice(-7).includes('sync')?`<li>${ic('refresh')}Waiting for sync</li>`:''}</ul>`;
+}
+function streakNote(r){
+ const n=S.rw.days.length;
+ if(r.cycleToday) return `<p class="rw-note good">${ic('checkc')}Seven days in a row, completed today. A new 7-day streak starts tomorrow.</p>`;
+ if(r.lastMiss>=n-7&&r.streak===0) return `<p class="rw-note">${ic('x')}Your streak restarted after ${dLabel(S.rw.days[r.lastMiss].t)}. All ${r.bal} coins you earned are kept.</p>`;
+ if(r.lastPause>=n-7){const d=S.rw.days[r.lastPause];return `<p class="rw-note">${ic('pause')}${r.lastPause===n-1?'Today is':dLabel(d.t)+' was'} paused (${d.pause==='clinician'?'clinician-directed break':'device fault'}). Your streak is kept, and paused days earn no coins.</p>`}
+ return '';
+}
+function syncNotice(){
+ const past=S.rw.days.slice(0,-1).filter(d=>d.pend>0);
+ if(!past.length) return '';
+ const d=past[0],side=d.pendSide||'R',off=!S.dev[side].on;
+ return `<section class="banner off rw-sync">${ic('refresh')}<span class="b-txt"><strong>${fmtDur(d.pend)} of readings waiting to sync</strong><span>Recorded on ${dLabel(d.t)} and stored on your ${sideName(side).toLowerCase()} insole. They count for that day once they sync.</span></span>
+  <button type="button" class="btn primary sm sync-btn" data-action="rwSyncNow" ${off?'disabled':''}>${off?'Reconnect first':'Sync now'}</button></section>`;
+}
+function healthyDayCard(r){
+ const t=rwToday(),st=r.todaySt,tx=r.tx.filter(x=>x.type==='day'&&x.i===S.rw.days.length-1).pop();
+ const flash=S.rw.flash==='day'&&st==='done';
+ const info=`<button type="button" class="info-btn" data-action="rwInfo" aria-expanded="${S.rw.info}" aria-controls="hd-info" aria-label="What is a Healthy Day?">${ic('info')}</button>`;
+ let body;
+ if(st==='done'){
+  const amt=tx?tx.amt:0;
+  body=`<div class="hd-done${flash?' flash':''}"><span class="hd-coin">${coinIc('big')}</span><div><p class="hd-big">Healthy Day completed</p><p class="hd-plus">+${amt} Health Coins${tx&&tx.note==='used'?' · reward used for this renewal':''}</p></div></div>
+   <p class="fig"><b>${fmtDur(t.wear)}</b> <span>of ${fmtDur(RW.GOAL)}</span></p>${rwBar(RW.GOAL,RW.GOAL,'done big')}
+   <p class="note">Today's monitoring goal is met. Extra wear today doesn't add more coins.</p>`;
+ } else if(st==='paused'){
+  body=`<p class="fig"><b>${fmtDur(t.wear)}</b> <span>of ${fmtDur(RW.GOAL)}</span></p>${rwBar(t.wear,RW.GOAL,'paused big')}
+   <p class="rw-note">${ic('pause')}Monitoring paused today: ${t.pause==='clinician'?'your clinician asked you to pause':'insole fault'}. Today earns no coins and won't break your streak.</p>`;
+ } else if(st==='sync'){
+  const side=t.pendSide||(!S.dev.L.on?'L':'R'),off=!S.dev[side].on;
+  body=`<p class="fig"><b>${fmtDur(t.wear+t.pend)}</b> <span>of ${fmtDur(RW.GOAL)} recorded</span></p>${rwBar(t.wear,RW.GOAL,'big')}
+   <p class="rw-note">${ic('refresh')}${fmtDur(t.wear)} has synced. ${fmtDur(t.pend)} is stored on your ${sideName(side).toLowerCase()} insole and counts once it syncs.</p>
+   <button type="button" class="btn primary sm" data-action="rwSyncNow" ${off?'disabled':''}>${off?`Reconnect the ${sideName(side).toLowerCase()} insole to sync`:'Sync now'}</button>`;
+ } else {
+  const gap=RW.GOAL-t.wear;
+  body=`<p class="fig"><b>${fmtDur(t.wear)}</b> <span>of ${fmtDur(RW.GOAL)}</span></p>${rwBar(t.wear,RW.GOAL,'big')}
+   <p class="hd-gap"><b>${fmtDur(gap)}</b> of monitoring to go</p>
+   <p>Complete today's monitoring goal to earn <b>${RW.DAY} Health Coins</b>.</p>
+   ${anyOff()?`<p class="rw-note">${ic('unplug')}${offText()} Wear from that insole counts once its stored readings sync.</p>`:''}`;
+ }
+ return `<section class="card rw-sec"><div class="card-head"><h2 class="h3">Today's Healthy Day</h2>${info}</div>
+  <p class="rw-info" id="hd-info" ${S.rw.info?'':'hidden'}>Healthy Day recognises completion of your monitoring goal. It is not a medical assessment.</p>${body}</section>`;
+}
+function expander(key,title,inner,cls){
+ const o=S.rw.open[key];
+ return `<section class="rw-exp${cls?' '+cls:''}"><button type="button" class="exp-head" data-action="rwToggle" data-k="${key}" aria-expanded="${o}" aria-controls="exp-${key}">${title}${ic('chev','exp-chev')}</button><div class="exp-body" id="exp-${key}" ${o?'':'hidden'}>${inner}</div></section>`;
+}
+function dayCoins(r){const m={};r.tx.forEach(x=>{if(x.type==='redeem')return;const e=m[x.i]||(m[x.i]={day:0,bonus:0,note:'',late:null,hasBonus:false});if(x.type==='day'){e.day=x.amt;e.note=x.note;e.late=x.late}else{e.bonus=x.amt;e.hasBonus=true;if(x.note)e.note=e.note||x.note}});return m}
+const monthKey=t=>{const d=new Date(t);return d.getUTCFullYear()+'-'+d.getUTCMonth()};
+function dayDetail(i,r,dc){
+ const d=S.rw.days[i],st=r.st[i],e=dc[i],isT=i===S.rw.days.length-1,when=(isT?'Today, ':'')+dLabel(d.t,isT?{day:'numeric',month:'short'}:undefined);
+ const tot=e?e.day+e.bonus:0;let main,notes=[];
+ if(st==='done'){main=`Healthy Day · ${fmtDur(d.wear)} worn`;
+  if(e&&e.hasBonus)notes.push(`Includes the ${e.bonus}-coin bonus for 7 days in a row.`);
+  if(e&&e.note==='used')notes.push('Reward already used for this renewal, so no coins were added.');
+  if(d.late)notes.push('Synced later, counted for this day.');}
+ else if(st==='missed'){main=`${fmtDur(d.wear)} worn, below the ${fmtDur(RW.GOAL)} goal`;notes.push('Streak restarted. Earlier coins were kept.')}
+ else if(st==='paused'){main=`Paused: ${d.pause==='clinician'?'clinician-directed break':'insole fault'}`;notes.push('Streak kept. Paused days earn no coins.')}
+ else if(st==='sync'){main=`${fmtDur(d.wear)} synced, ${fmtDur(d.pend)} waiting to sync`}
+ else {main=`${fmtDur(d.wear)} of ${fmtDur(RW.GOAL)} so far`;notes.push('Coins are added when today\'s goal is met.')}
+ return `<div class="cal-detail" aria-live="polite"><div class="cd-head"><b>${when}</b><span class="cd-chip${tot?'':' z'}">${tot?`${coinIc()}+${tot}`:'No coins'}</span></div><p class="cd-main">${main}</p>${notes.map(n=>`<p class="cd-note">${n}</p>`).join('')}</div>`;
+}
+function historyCal(r){
+ const R=S.rw,dc=dayCoins(r),n=R.days.length;
+ const doneN=r.tx.filter(x=>x.type==='day'&&x.amt>0).length,bonN=r.tx.filter(x=>x.type==='bonus'&&x.amt>0).length;
+ const months=[];R.days.forEach(d=>{const k=monthKey(d.t);if(!months.includes(k))months.push(k)});
+ const cur=months.includes(R.calMonth)?R.calMonth:months[months.length-1],ci=months.indexOf(cur);
+ const [y,mo]=cur.split('-').map(Number),first=Date.UTC(y,mo,1),dim=new Date(Date.UTC(y,mo+1,0)).getUTCDate();
+ const idx={};R.days.forEach((d,i)=>{if(monthKey(d.t)===cur)idx[new Date(d.t).getUTCDate()]=i});
+ const inMonth=Object.values(idx);
+ const sel=R.calDay!=null&&inMonth.includes(R.calDay)?R.calDay:inMonth[inMonth.length-1];
+ let mTot=0,mDays=0,mBon=0;inMonth.forEach(i=>{const e=dc[i];if(e){mTot+=e.day+e.bonus;if(e.day>0)mDays++;if(e.hasBonus&&e.bonus>0)mBon++}});
+ const lead=(new Date(first).getUTCDay()+6)%7;
+ let cells='';for(let k=0;k<lead;k++)cells+='<span class="cc empty"></span>';
+ const word={done:'coins earned',missed:'missed, no coins',paused:'paused, no coins',sync:'waiting for sync',pending:'today, in progress'};
+ for(let dn=1;dn<=dim;dn++){
+  const i=idx[dn];
+  if(i==null){cells+=`<span class="cc none"><span class="cd">${dn}</span></span>`;continue}
+  const st=r.st[i],e=dc[i],tot=e?e.day+e.bonus:0,bonus=!!(e&&e.hasBonus);
+  const lab=`${dLabel(R.days[i].t)}: ${st==='done'?`${tot} coins${bonus?', streak bonus day':''}`:word[st]}`;
+  cells+=`<button type="button" class="cc ${st}${bonus?' bonus':''}${i===n-1?' today':''}" data-action="calDay" data-v="${i}" aria-pressed="${i===sel}" aria-label="${lab}"><span class="cd">${dn}</span></button>`;
+ }
+ const mName=k=>{const [a,b]=k.split('-').map(Number);return new Date(Date.UTC(a,b,1)).toLocaleDateString('en-GB',{timeZone:'UTC',month:'long',year:'numeric'})};
+ return `<p class="note">${r.bal} coins from ${doneN} Healthy Days and ${bonN} streak bonuses since ${dLabel(R.days[0].t,{day:'numeric',month:'short'})}.${R.redeemed?` ${R.redeemed.amount} coins used for this renewal on 30 Oct.`:''}</p>
+  <div class="cal">
+   <div class="cal-nav">
+    <button type="button" class="cal-arrow" data-action="calStep" data-v="-1" aria-label="Previous month" ${ci>0?'':'disabled'}>${ic('back')}</button>
+    <label class="cal-sel" for="cal_m"><span class="sr">Month</span><select id="cal_m" data-input="calMonth">${months.slice().reverse().map(k=>`<option value="${k}" ${k===cur?'selected':''}>${mName(k)}</option>`).join('')}</select></label>
+    <button type="button" class="cal-arrow" data-action="calStep" data-v="1" aria-label="Next month" ${ci<months.length-1?'':'disabled'}>${ic('chev')}</button>
+   </div>
+   <dl class="cal-stats"><div><dt>Coins</dt><dd>+${mTot}</dd></div><div><dt>Healthy Days</dt><dd>${mDays}</dd></div><div><dt>Bonuses</dt><dd>${mBon}</dd></div></dl>
+   <div class="cal-wd" aria-hidden="true">${['Mo','Tu','We','Th','Fr','Sa','Su'].map(x=>`<span>${x}</span>`).join('')}</div>
+   <div class="cal-grid" role="group" aria-label="Coins by day, ${mName(cur)}">${cells}</div>
+   <ul class="cal-key" aria-hidden="true"><li><i class="k done"></i>Earned</li><li><i class="k bonus"></i>Bonus</li><li><i class="k missed"></i>Missed</li><li><i class="k paused"></i>Paused</li><li><i class="k today"></i>Today</li></ul>
+   ${sel!=null?dayDetail(sel,r,dc):''}
+  </div>`;
+}
+const RULES=`<ul class="list rules">
+ <li>${ic('check')}<span><b>Healthy Day:</b> ${fmtDur(RW.GOAL)} of valid on-foot monitoring from both insoles in one calendar day earns ${RW.DAY} Health Coins, once a day. Extra wear earns nothing extra.</span></li>
+ <li>${ic('check')}<span>Only time both insoles are on your feet and recording counts, not time connected to your phone. Readings stored on an insole count for the day they were recorded once they sync, and each minute is counted once.</span></li>
+ <li>${ic('check')}<span>You don't need a symptom check-in, normal readings or a day without alerts to earn coins.</span></li>
+ <li>${ic('check')}<span><b>Health Streak:</b> 7 Healthy Days in a row earn ${RW.BONUS} bonus coins, then a new 7-day streak starts.</span></li>
+ <li>${ic('x')}<span>Missing a day restarts your streak. Coins you've earned stay.</span></li>
+ <li>${ic('pause')}<span>A device fault or a break your clinician asked for pauses your streak. Paused days don't count for or against it, and earn no coins.</span></li>
+ <li>${ic('lock')}<span><b>Renewal credit:</b> Health Coins lower the price of your next six-month Advanced plan. Coins can't be withdrawn as cash.</span></li>
+ <li>${ic('check')}<span>Free and Advanced members both earn coins. Switching plans keeps your coins, history and streak. Alerts and guidance never depend on coins.</span></li>
+</ul>`;
+function demoPanel(r){
+ const t=rwToday(),st=r.todaySt,can=st==='pending';
+ const b=(act,v,title,desc,dis)=>`<li><button type="button" class="demo-btn" data-action="${act}" ${v?`data-v="${v}"`:''} ${dis?'disabled':''}><b>${title}</b><span>${desc}</span></button></li>`;
+ return `<p class="note">These controls load sample situations for presenting. They are separate from Meera's own actions.</p>
+ <ul class="demo-list">
+  ${b('rwComplete','','Complete today\'s goal',st==='done'?'Already completed today. Tapping again adds nothing.':st==='paused'?'Today is paused, so it can\'t earn coins.':st==='sync'?'Goal recorded. Waiting for readings to sync.':`Adds ${fmtDur(RW.GOAL-t.wear)} of valid wear, so today reaches ${fmtDur(RW.GOAL)}.`,!can)}
+  ${b('rwScenario','milestone','Show seventh-day milestone','Six Healthy Days in a row. Complete today to see the daily reward and the 15-coin bonus.')}
+  ${b('rwScenario','missed','Show missed day','Yesterday fell short of the goal, so the streak restarts. Coins are kept.')}
+  ${b('rwScenario','paused','Show paused day','Yesterday was paused for an insole fault. The streak holds and no coins are added.')}
+  ${b('rwScenario','sync','Show delayed sync','55 minutes from yesterday are stored on the right insole. Sync them to complete that day.')}
+  ${S.rw.scenario?b('rwScenario','base','Back to Meera\'s history','Reload her real history: 408 coins and a 5-day streak.'):''}
+ </ul>`;
+}
+function rewards(){
+ const r=rwReplay(),R=S.rw;
+ const credit=R.redeemed?R.redeemed.amount:r.bal;
+ let save;
+ if(R.redeemed) save=`<p class="fig"><b>${R.redeemed.amount}</b> <span>Health Coins applied</span></p><p class="sv-sub">Reward used for this renewal.</p><p class="note">Healthy Days and streaks still count. New coins start after this renewal.</p>`;
+ else save=`<p class="fig"><b>${r.bal}</b> <span>Health Coins</span></p><p class="sv-sub">Auto-applied on your next Advanced renewal.</p>`;
+ return `<div class="pad">${backBar('Home','home')}
+  <header><h1 class="title">Health Rewards</h1><p class="sub">Coins for keeping up your daily monitoring.</p></header>
+  ${R.scenario?`<div class="scn-bar">${ic('flag')}<span><b>Scenario loaded: ${SCEN[R.scenario].name}.</b> Sample history for presenting.</span></div>`:''}
+  ${syncNotice()}
+  ${healthyDayCard(r)}
+  <section class="card rw-sec"><div class="card-head"><h2 class="h3">Health Streak</h2></div>
+   <p class="fig"><b>${r.streak}</b> <span>of 7 days completed</span></p>
+   ${streakMarkers(r)}
+   <p>Complete seven days in a row for <b>${RW.BONUS} bonus coins</b>.</p>
+   ${streakNote(r)}
+   <p class="note">Missed a day? Your streak restarts, but your earned coins stay. Device faults and clinician-directed breaks pause it instead.</p>
+  </section>
+  <section class="card rw-sec"><div class="card-head"><h2 class="h3">Your renewal savings</h2>${coinIc()}</div>${save}</section>
+  ${expander('hist','Coin history',historyCal(r))}
+  ${expander('rules','How Health Coins work',RULES)}
+  ${expander('demo','Demo scenarios',demoPanel(r),'demo-exp')}
+ </div>`;
+}
+/* sheets */
+function sheetCycle(){
+ const s=S.sheet;
+ return `<div class="grab"></div><div class="celebrate" aria-hidden="true">${'<i></i>'.repeat(12)}</div>
+  <div class="center cyc"><span class="cyc-coin">${coinIc('huge')}</span><h2 id="sheet-title">7-day Health Streak complete</h2>
+  <p class="sub">Seven days in a row of meeting your monitoring goal.</p></div>
+  <dl class="bill"><div><dt>Today's Healthy Day</dt><dd class="gain">+${s.day}</dd></div><div><dt>Streak bonus</dt><dd class="gain">+${s.bonus}</dd></div></dl>
+  <button type="button" class="btn primary" data-action="cycleClose">Start new streak</button>`;
+}
+
 /* ---------- assistant ---------- */
 const T={
  en:{
@@ -903,7 +1330,7 @@ const T={
   u_report:'Prepare report', a_report:'Done. Your report is ready in Reports. It includes your readings, data gaps and the symptoms you confirmed.',
   u_notify:'Let Riya know', a_notify:'I\'ve opened a preview of the update for Riya. Nothing is sent until you choose Send.', a_notify_off:'Sharing with Riya is off. You can turn it on in Profile.',
   u_restart:'Start over',
-  u_readings:'Explain my readings', a_readings:'Today both insoles read between 29.5 and 30.9 °C, and your left and right feet are within 1 °C of each other at every matching spot. You\'ve worn the insoles for 7.2 hours today. These readings don\'t replace your daily foot check.',
+  u_readings:'Explain my readings', a_readings:()=>'Today both insoles read between 29.5 and 30.9 °C, and your left and right feet are within 1 °C of each other at every matching spot. You\'ve worn the insoles for '+fmtDur(todayWear())+' today. These readings don\'t replace your daily foot check.',
   a_readings_alert:'Your left forefoot is still reading 2.6 °C warmer than the right. Your follow-up is marked complete. If anything changes, record it and contact your care team.',
   a_readings_off:'One insole isn\'t connected, so today\'s readings are incomplete and I can\'t compare your feet. Reconnect it from the Insoles card on Home.',
   u_log:'Log a symptom', a_log:'I\'ve opened the symptom form. You can record anything you\'ve noticed.',
@@ -931,7 +1358,7 @@ const T={
   u_report:'रिपोर्ट तैयार करें', a_report:'हो गया। आपकी रिपोर्ट Reports में तैयार है। इसमें आपकी रीडिंग, डेटा में कमी और आपके पुष्टि किए गए लक्षण शामिल हैं।',
   u_notify:'रिया को बताएँ', a_notify:'मैंने रिया के लिए अपडेट का प्रीव्यू खोला है। जब तक आप Send नहीं चुनतीं, कुछ नहीं भेजा जाएगा।', a_notify_off:'रिया के साथ शेयरिंग बंद है। आप इसे Profile में चालू कर सकती हैं।',
   u_restart:'फिर से शुरू करें',
-  u_readings:'मेरी रीडिंग समझाइए', a_readings:'आज दोनों इनसोल में तापमान 29.5 से 30.9 °C के बीच है, और हर मिलती-जुलती जगह पर बाएँ और दाएँ पैर का अंतर 1 °C के अंदर है। आज आपने 7.2 घंटे इनसोल पहने। ये रीडिंग रोज़ की पैरों की जाँच की जगह नहीं लेतीं।',
+  u_readings:'मेरी रीडिंग समझाइए', a_readings:()=>'आज दोनों इनसोल में तापमान 29.5 से 30.9 °C के बीच है, और हर मिलती-जुलती जगह पर बाएँ और दाएँ पैर का अंतर 1 °C के अंदर है। आज आपने '+fmtDurHi(todayWear())+' इनसोल पहने। ये रीडिंग रोज़ की पैरों की जाँच की जगह नहीं लेतीं।',
   a_readings_alert:'आपके बाएँ पैर का आगे का हिस्सा अब भी दाएँ से 2.6 °C ज़्यादा गर्म दर्ज हो रहा है। आपका फ़ॉलो-अप पूरा दर्ज है। कुछ भी बदले तो उसे दर्ज करें और अपनी केयर टीम से संपर्क करें।',
   a_readings_off:'एक इनसोल कनेक्ट नहीं है, इसलिए आज की रीडिंग अधूरी है और मैं दोनों पैरों की तुलना नहीं कर सकती। होम पर Insoles कार्ड से उसे फिर से कनेक्ट करें।',
   u_log:'लक्षण दर्ज करें', a_log:'मैंने लक्षण फ़ॉर्म खोल दिया है। आपने जो भी महसूस किया, वहाँ दर्ज कर सकती हैं।',
@@ -1098,7 +1525,7 @@ function sheetSetup(){
   :s.check==='run'?`<div class="pair"><span class="spin"></span><span class="pt"><strong>Reading sensors</strong><span>Keep standing still</span></span></div>`
   :`<button type="button" class="btn primary" data-action="runCheck">Start check</button>`);
  }
- return head('Insoles ready','')+`<div class="big-ok">${ic('check')}</div><p class="center"><b style="color:var(--navy)">Both insoles are paired and recording.</b><br><span class="note">Wear them for at least 8 hours a day for complete data.</span></p><button type="button" class="btn primary" data-action="setupDone">Done</button>`;
+ return head('Insoles ready','')+`<div class="big-ok">${ic('check')}</div><p class="center"><b style="color:var(--navy)">Both insoles are paired and recording.</b><br><span class="note">Your daily monitoring goal is ${fmtDur(RW.GOAL)} of wear.</span></p><button type="button" class="btn primary" data-action="setupDone">Done</button>`;
 }
 function notifyBody(){
  const sym=lastSym();
@@ -1157,11 +1584,11 @@ function sheetUpgrade(){
   <div class="callout info">${ic('info')}<span>Alerts, next steps, symptom recording and basic reports are included in every plan.</span></div>
   <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Not now</button><button type="button" class="btn primary" data-action="tier" data-tier="adv">Switch to Advanced</button></div>`;
 }
-const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade,explain:sheetExplain};
+const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade,explain:sheetExplain,cycle:sheetCycle};
 
 /* ---------- render ---------- */
-const SCREENS={home,trends,assistant,profile,device,alert:alertScr,report};
-const TAB_OF={home:'home',device:'home',alert:'home',report:'home',trends:'trends',assistant:'assistant',profile:'profile'};
+const SCREENS={home,trends,assistant,profile,device,alert:alertScr,report,rewards};
+const TAB_OF={rewards:'home',home:'home',device:'home',alert:'home',report:'home',trends:'trends',assistant:'assistant',profile:'profile'};
 function focusKey(el){if(!el||el===document.body)return null;if(el.id)return '#'+el.id;const d=el.dataset||{};if(!d.action)return null;return `[data-action="${d.action}"]${d.k?`[data-k="${d.k}"]`:''}${d.v!=null?`[data-v="${CSS.escape(d.v)}"]`:''}${d.to?`[data-to="${d.to}"]`:''}${d.tier?`[data-tier="${d.tier}"]`:''}`}
 function render(){
  const fk=focusKey(document.activeElement);
@@ -1170,8 +1597,10 @@ function render(){
  view.className='view'+(S.screen==='assistant'&&isAdv()?' chat':'');
  view.innerHTML=SCREENS[S.screen]();
  view.dataset.screen=S.screen;
- if(same) view.scrollTop=st; else {view.scrollTop=0;view.classList.remove('enter');void view.offsetWidth;view.classList.add('enter')}
+ const wasTop=S.toTop;S.toTop=false;
+ if(same&&!wasTop) view.scrollTop=st; else {view.scrollTop=0;view.classList.remove('enter');void view.offsetWidth;view.classList.add('enter')}
  const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
+ view.querySelectorAll('.markers').forEach(row=>{const f=row.querySelector('.is-today');if(f)row.scrollLeft=f.offsetLeft+f.offsetWidth-row.clientWidth+8});
  const tab=TAB_OF[S.screen];
  $('#tabs').innerHTML=[['home','Home','home'],['trends','Trends','trend'],['assistant','Assistant','chat'],['profile','Profile','user']].map(t=>`<button type="button" data-action="go" data-to="${t[0]}" ${tab===t[0]?'aria-current="page"':''}>${ic(t[2])}${t[1]}</button>`).join('');
  $('#tier').innerHTML=`<button type="button" role="radio" aria-checked="${!isAdv()}" data-action="tier" data-tier="free">Free</button><button type="button" role="radio" aria-checked="${isAdv()}" data-action="tier" data-tier="adv">${ic('spark')}Advanced</button>`;
@@ -1182,7 +1611,7 @@ function render(){
   layer.hidden=false;layer.className='layer'+(isNew?' anim':'');
   layer.innerHTML=`<button type="button" class="scrim" data-action="close" aria-label="Close" tabindex="-1"></button><div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">${SHEETS[S.sheet.t]()}</div>`;
   view.inert=true;$('#tabs').inert=true;
-  if(isNew){const p=layer.querySelector('.panel');p.focus({preventScroll:true})}
+  if(isNew){const p=layer.querySelector('.panel');p.focus({preventScroll:true});$('#toast').hidden=true}
   lastSheet=S.sheet.t;
  } else {layer.hidden=true;layer.innerHTML='';view.inert=false;$('#tabs').inert=false;lastSheet=null}
  if(fk){try{const el=document.querySelector(fk);if(el&&!el.closest('[inert]'))el.focus({preventScroll:true})}catch(e){}}
@@ -1231,7 +1660,8 @@ const A={
  toggleDev:d=>{
   const v=S.dev[d.k];
   if(v.on){v.on=false;v.since=tick();toast(`${sideName(d.k)} insole disconnected`)}
-  else{const t=tick(3);S.gaps.push({k:d.k,from:v.since,to:t});v.on=true;v.since=null;v.sync=t;toast(`${sideName(d.k)} insole reconnected and synced`)}
+  else{const t=tick(3);S.gaps.push({k:d.k,from:v.since,to:t});v.on=true;v.since=null;v.sync=t;const sy=!anyOff()?rwSync():null;
+   toast(sy?`${sideName(d.k)} insole reconnected. ${fmtDur(sy.mins)} of stored readings synced.`:`${sideName(d.k)} insole reconnected and synced`)}
   render();
  },
  openSetup:()=>{S.setup={step:0,L:'idle',R:'idle',fit:{},check:null};openSheet({t:'setup'});render()},
@@ -1271,6 +1701,23 @@ const A={
  revokeYes:()=>{S.care.on=false;S.care.since=null;S.sheet=null;render();toast('Sharing with Riya stopped')},
  upgrade:d=>{openSheet({t:'upgrade',f:d.f});render()},
  explain:()=>{openSheet({t:'explain'});render()},
+ rwInfo:()=>{S.rw.info=!S.rw.info;render()},
+ rwToggle:d=>{S.rw.open[d.k]=!S.rw.open[d.k];render()},
+ calDay:d=>{S.rw.calDay=+d.v;render()},
+ calStep:d=>{const ms=[];S.rw.days.forEach(x=>{const k=monthKey(x.t);if(!ms.includes(k))ms.push(k)});const cur=ms.includes(S.rw.calMonth)?S.rw.calMonth:ms[ms.length-1];const nx=ms[ms.indexOf(cur)+(+d.v)];if(nx){S.rw.calMonth=nx;S.rw.calDay=null;render()}},
+ rwComplete:()=>{
+  const prev=rwReplay();if(prev.todaySt!=='pending'){toast(prev.todaySt==='done'?'Today\'s Healthy Day is already complete':'Today can\'t earn coins right now');return}
+  const t=rwToday(),need=RW.GOAL-t.wear;tick();
+  if(!anyOff()){t.wear=RW.GOAL;['L','R'].forEach(k=>S.dev[k].sync=S.clock)}
+  else{t.pend=need;t.pendSide=!S.dev.L.on?'L':'R'}
+  const now=rwAfter(prev);S.toTop=true;render();
+  if(S.sheet&&S.sheet.t==='cycle') return;
+  if(now.todaySt==='sync') toast(`${fmtDur(RW.GOAL)} recorded. Waiting for the ${sideName(t.pendSide).toLowerCase()} insole to sync.`);
+  else{const x=now.tx.filter(z=>z.type==='day').pop();toast(x&&x.note==='used'?'Healthy Day completed. Reward already used for this renewal.':`Healthy Day completed · +${x?x.amt:0} Health Coins`)}
+ },
+ rwScenario:d=>{const keep={open:S.rw.open,info:S.rw.info};S.rw=rwInit(d.v);S.rw.open=keep.open;S.rw.info=keep.info;S.toTop=true;render();toast(d.v==='base'?'Meera\'s history restored':`Scenario loaded: ${SCEN[d.v].name}`)},
+ rwSyncNow:()=>{if(anyOff()){toast('Reconnect both insoles to sync');return}const r=rwSync();S.toTop=true;render();if(r&&!(S.sheet&&S.sheet.t==='cycle'))toast(`${fmtDur(r.mins)} of stored readings synced to ${r.dates.map(t=>dLabel(t)).join(', ')}`)},
+ cycleClose:()=>{S.sheet=null;render();toast('A new 7-day streak starts tomorrow')},
  chip:d=>{userIntent(d.v,null)},
  chatSend:()=>{const t=S.chat.draft.trim();if(!t)return;S.chat.draft='';const it=classify(t);if(it==='restart'){startChat();render();return}S.chat.msgs.push({from:'u',raw:t});respond(it||'unknown');render();const el=$('#chat_in');if(el)el.focus()},
  voice:()=>{if(S.listening)return;S.listening=true;render();
@@ -1282,7 +1729,7 @@ const A={
  print:()=>{$('#printArea').innerHTML=reportHTML(true);window.print()},
  download:()=>{const b=new Blob([reportText()],{type:'text/plain'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='StepSure-report-Meera-30-Oct-2026.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);toast('Report downloaded')}
 };
-const INP={chat:v=>{S.chat.draft=v},formNote:v=>{if(S.form)S.form.note=v},instrText:v=>{if(S.instr)S.instr.text=v},instrBy:v=>{if(S.instr)S.instr.by=v}};
+const INP={calMonth:v=>{S.rw.calMonth=v;S.rw.calDay=null;render()},chat:v=>{S.chat.draft=v},formNote:v=>{if(S.form)S.form.note=v},instrText:v=>{if(S.instr)S.instr.text=v},instrBy:v=>{if(S.instr)S.instr.by=v}};
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const f=A[b.dataset.action];if(f){e.preventDefault();f(b.dataset,b)}});
 document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.input;if(k&&INP[k])INP[k](e.target.value)});

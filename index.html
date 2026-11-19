@@ -23,6 +23,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{margin:0}
 body{background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
@@ -179,7 +180,7 @@ button.banner:hover{filter:brightness(.985)}
 .rw-bar.done i{background:var(--teal)}
 .rw-bar.paused i{background:#A9B3C2}
 .rw-bar.gold i{background:linear-gradient(90deg,#E9A92A,#F2C45A)}
-.scn-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#6B4FA0;background:#F1ECFA;padding:3px 8px;border-radius:999px}
+.scn-tag{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;max-width:100%;box-sizing:border-box;font-size:11.5px;line-height:1.3;font-weight:600;letter-spacing:0;text-transform:none;text-align:center;color:#5B3F94;background:#F1ECFA;padding:4px 11px;border-radius:999px;white-space:normal}
 .scn-bar{display:flex;gap:9px;align-items:flex-start;border:1.5px dashed #BBA7E0;background:#F7F3FD;color:#4B3577;border-radius:14px;padding:10px 12px;font-size:13.5px}
 .scn-bar svg{width:18px;height:18px;margin-top:1px}
 .rw-sec{gap:10px!important}
@@ -329,6 +330,12 @@ button.cc:hover .cd{filter:brightness(.96)}
 .btn.sm{min-height:40px;padding:8px 12px;font-size:14px;border-radius:12px}
 .btn:disabled{opacity:.45}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.is-locked{color:var(--muted);border-style:dashed;flex-wrap:nowrap;gap:8px}
+.btn.is-locked .adv{margin-left:2px}
+.btn.is-locked span:not(.adv){white-space:nowrap}
+.btn.is-locked svg{color:var(--blue)}
+.act.act-lock{display:inline-flex;align-items:center;gap:4px;color:var(--muted);border-style:dashed}
+.act.act-lock svg{width:13px;height:13px;color:var(--blue)}
 .sheet-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 .sheet-actions .btn{width:auto;white-space:nowrap;padding:8px 16px}
 .adv{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 7px 3px 5px;border-radius:999px;white-space:nowrap}
@@ -683,7 +690,6 @@ const SCEN={
  base:{name:null,seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',5]])},
  milestone:{name:'Seventh-day milestone',seg:BASE_HEAD.concat([['m',1],['d',4],['m',1],['d',6]])},
  missed:{name:'Missed day',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['m',1]])},
- paused:{name:'Paused day',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['p',1,'device']])},
  sync:{name:'Delayed sync',seg:BASE_HEAD.concat([['m',1],['d',5],['m',1],['d',4],['s',1]])}
 };
 function buildDays(key){
@@ -1040,7 +1046,7 @@ function tracker(){
   <li><span class="dot${sh?' on':''}"></span><span class="tt"><strong>Report shared</strong><span>${sh?`With ${esc(sh.to)}, ${fmt(sh.time)}`:'Not shared yet'}</span></span>${sh?'':`<button type="button" class="act" data-action="share">Share</button>`}</li>
   <li><span class="dot ${riya.dot}"></span><span class="tt"><strong>Riya notified ${isAdv()?'':adv()}</strong>${riya.s?`<span>${riya.s}</span>`:''}${isAdv()&&c.on?pipe:''}</span>${riya.act}</li>
   <li><span class="dot${S.clin.contacted?' on':''}"></span><span class="tt"><strong>Clinician contacted</strong><span>${S.clin.contacted?`You marked this at ${fmt(S.clin.contacted)}`:'Not yet. Mark it once you have spoken to them.'}</span></span>${S.clin.contacted?'':`<button type="button" class="act" data-action="contacted">Mark done</button>`}</li>
-  <li><span class="dot${S.clin.instr?' on':''}"></span><span class="tt"><strong>Clinician instructions</strong><span>${S.clin.instr?`Recorded by you at ${fmt(S.clin.instr.at)}`:'Not recorded'}</span></span>${S.clin.instr?'':`<button type="button" class="act" data-action="instr">Record</button>`}</li>
+  <li><span class="dot${S.clin.instr?' on':''}"></span><span class="tt"><strong>Clinician instructions</strong><span>${S.clin.instr?`Recorded by you at ${fmt(S.clin.instr.at)}`:'Not recorded'}</span></span>${S.clin.instr?'':isAdv()?`<button type="button" class="act" data-action="instr">Record</button>`:`<button type="button" class="act act-lock" data-action="noop" aria-disabled="true" aria-label="Record clinician instructions, available on Advanced">${ic('lock')}Record</button>`}</li>
   <li><span class="dot${S.follow?' on':''}"></span><span class="tt"><strong>Follow-up</strong><span>${S.follow?`Completed at ${fmt(S.follow)}`:'Open'}</span></span></li>
  </ul>`;
 }
@@ -1094,8 +1100,8 @@ function report(){
    ${isAdv()?'':`<button type="button" class="locked" data-action="upgrade" data-f="Richer report summaries">${ic('lock')}<span><strong>Plain-language summary and trend chart</strong><br>Included with Advanced</span></button>`}
   </section>
   <div class="actions">
-   <button type="button" class="btn primary" data-action="share">${ic('share')}Share report</button>
-   <button type="button" class="btn secondary" data-action="instr">${ic('edit')}${S.clin.instr?'Edit instructions':'Record clinician instructions'}</button>
+   <button type="button" class="btn primary" data-action="share">${ic('share')}Share</button>
+   ${isAdv()?`<button type="button" class="btn secondary" data-action="instr">${ic('edit')}${S.clin.instr?'Edit instructions':'Record clinician instructions'}</button>`:`<button type="button" class="btn secondary" data-action="noop" aria-disabled="true" aria-label="${S.clin.instr?'Edit instructions':'Record clinician instructions'}, available on Advanced">${ic('lock')}${S.clin.instr?'Edit instructions':'Record clinician instructions'}</button>`}
    <button type="button" class="btn secondary wide" data-action="complete" ${S.follow||!S.alert?'disabled':''}>${ic('checkc')}${S.follow?'Follow-up completed':S.alert?'Mark follow-up completed':'No open follow-up'}</button>
    ${FRAMED?`<button type="button" class="btn secondary wide" data-action="copyReport">${ic('copy')}Copy report text</button>`:`<button type="button" class="btn secondary" data-action="print">${ic('print')}Print</button><button type="button" class="btn secondary" data-action="download">${ic('download')}Download</button>`}
   </div>
@@ -1270,7 +1276,6 @@ function demoPanel(r){
   ${b('rwComplete','','Complete today\'s goal',st==='done'?'Already completed today. Tapping again adds nothing.':st==='paused'?'Today is paused, so it can\'t earn coins.':st==='sync'?'Goal recorded. Waiting for readings to sync.':`Adds ${fmtDur(RW.GOAL-t.wear)} of valid wear, so today reaches ${fmtDur(RW.GOAL)}.`,!can)}
   ${b('rwScenario','milestone','Show seventh-day milestone','Six Healthy Days in a row. Complete today to see the daily reward and the 15-coin bonus.')}
   ${b('rwScenario','missed','Show missed day','Yesterday fell short of the goal, so the streak restarts. Coins are kept.')}
-  ${b('rwScenario','paused','Show paused day','Yesterday was paused for an insole fault. The streak holds and no coins are added.')}
   ${b('rwScenario','sync','Show delayed sync','55 minutes from yesterday are stored on the right insole. Sync them to complete that day.')}
   ${S.rw.scenario?b('rwScenario','base','Back to Meera\'s history','Reload her real history: 408 coins and a 5-day streak.'):''}
  </ul>`;
@@ -1553,17 +1558,6 @@ function sheetRevoke(){
  return head('Stop sharing with Riya?','')+`<p>Riya won't receive any new updates. Updates already sent stay in your records.</p>
   <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Keep sharing</button><button type="button" class="btn primary" data-action="revokeYes">Stop sharing</button></div>`;
 }
-function sheetShare(){
- const s=S.sheet;
- if(s.done) return head('Report shared','')+`<div class="big-ok">${ic('check')}</div><p class="center"><b style="color:var(--navy)">Shared with ${esc(s.done)} at ${fmt(S.shares[S.shares.length-1].time)}</b></p>
-  <p class="note center">Sharing a report doesn't mark your clinician as contacted. Mark that in the follow-up tracker once you've spoken to them.</p><button type="button" class="btn primary" data-action="close">Done</button>`;
- const riyaOk=isAdv()&&S.care.on;
- return head('Share report','Choose who receives this report.')+`
-  <button type="button" class="recip" data-action="shareTo" data-v="Dr. Anjali Rao's clinic">${ic('clinic')}<span class="pt"><strong>Dr. Anjali Rao's clinic</strong><span>Diabetic foot clinic</span></span>${ic('chev')}</button>
-  ${riyaOk?`<button type="button" class="recip" data-action="shareTo" data-v="Riya">${ic('users')}<span class="pt"><strong>Riya</strong><span>Caregiver</span></span>${ic('chev')}</button>`
-  :`<button type="button" class="locked" data-action="${isAdv()?'consent':'upgrade'}" data-f="Caregiver sharing">${ic(isAdv()?'users':'lock')}<span><strong>Riya</strong><br>${isAdv()?'Turn on sharing first':'Caregiver sharing is inactive on Free'}</span></button>`}
-`;
-}
 function sheetInstr(){
  const d=S.instr;
  return head('Record clinician instructions','Write down what your clinician told you. StepSure doesn\'t add or change these.')+`
@@ -1580,11 +1574,11 @@ function sheetComplete(){
   <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Cancel</button><button type="button" class="btn primary" data-action="completeYes">Mark completed</button></div>`;
 }
 function sheetUpgrade(){
- return head(esc(S.sheet.f||'Advanced feature'),adv())+`<ul class="list"><li>${ic('chat')}<span>Scripted assistant in English and Hindi, by text or voice</span></li><li>${ic('file')}<span>Richer report summaries with trend charts</span></li><li>${ic('users')}<span>Caregiver sharing with Riya</span></li></ul>
+ return head(esc(S.sheet.f||'Advanced feature'),adv())+`<ul class="list"><li>${ic('chat')}<span>Scripted assistant in English and Hindi, by text or voice</span></li><li>${ic('file')}<span>Richer report summaries with trend charts</span></li><li>${ic('users')}<span>Caregiver sharing with Riya</span></li><li>${ic('edit')}<span>Record your clinician's instructions</span></li></ul>
   <div class="callout info">${ic('info')}<span>Alerts, next steps, symptom recording and basic reports are included in every plan.</span></div>
   <div class="btn-row"><button type="button" class="btn secondary" data-action="close">Not now</button><button type="button" class="btn primary" data-action="tier" data-tier="adv">Switch to Advanced</button></div>`;
 }
-const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,share:sheetShare,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade,explain:sheetExplain,cycle:sheetCycle};
+const SHEETS={form:sheetForm,setup:sheetSetup,notify:sheetNotify,consent:sheetConsent,revoke:sheetRevoke,instr:sheetInstr,complete:sheetComplete,upgrade:sheetUpgrade,explain:sheetExplain,cycle:sheetCycle};
 
 /* ---------- render ---------- */
 const SCREENS={home,trends,assistant,profile,device,alert:alertScr,report,rewards};
@@ -1683,9 +1677,9 @@ const A={
   if(f.fromChat){if(S.chat.stage!=='idle')S.chat.stage='done';S.chat.msgs.push({from:'a',key:'a_saved',p:{items:f.items.slice(),time:fmt(rec.time)}})}
   S.sheet=null;S.form=null;render();toast(`Symptoms recorded at ${fmt(rec.time)}`)},
  prepare:()=>{S.reportAt=S.reportAt||tick();go('report');toast('Report prepared')},
- share:()=>{openSheet({t:'share'});render()},
- shareTo:d=>{S.shares.push({to:d.v,time:tick()});S.sheet={t:'share',done:d.v};S.reportAt=S.reportAt||S.clock;render()},
- instr:()=>{const c=S.clin.instr;S.instr={text:c?c.text:'',by:c?c.by:'Dr. Anjali Rao',ok:false,err:''};openSheet({t:'instr'});render()},
+ share:()=>{},
+ noop:()=>{},
+ instr:()=>{if(!isAdv()){openSheet({t:'upgrade',f:'Clinician instructions'});render();return}const c=S.clin.instr;S.instr={text:c?c.text:'',by:c?c.by:'Dr. Anjali Rao',ok:false,err:''};openSheet({t:'instr'});render()},
  instrOk:()=>{S.instr.ok=!S.instr.ok;S.instr.err='';render()},
  instrSave:()=>{const d=S.instr;if(!d.text.trim()){d.err='Enter the instructions your clinician gave you.';render();return}if(!d.ok){d.err='Tick the confirmation to save.';render();return}
   S.clin.instr={text:d.text.trim(),by:d.by.trim()||'Clinician',at:tick()};S.sheet=null;S.instr=null;render();toast('Clinician instructions saved')},
